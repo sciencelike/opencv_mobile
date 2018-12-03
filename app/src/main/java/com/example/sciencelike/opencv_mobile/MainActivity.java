@@ -1,6 +1,7 @@
 package com.example.sciencelike.opencv_mobile;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,16 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.jar.Pack200;
+
+// フルスクリーン表示のために追加
+import android.view.View;
+
+// カメラ権限関連
+import android.support.v4.content.ContextCompat;
+import android.support.v4.app.ActivityCompat;
+import android.Manifest;
+import android.os.AsyncTask;
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Initialize OpenCV manager.
@@ -42,20 +53,69 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             }
         }
     };
+
     @Override
     public void onResume() {
+        Log.d("onResume","run");
         super.onResume();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, mLoaderCallback);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // カメラの権限確認
+        Log.d("onCreate","Permisson Check");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Log.d("onCreate","Permisson Granted");
+            launchCamera();
+        } else {
+            Log.d("onCreate","Permisson Not Found");
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.CAMERA
+            }, 1);
+        }
+
         // Set up camera listener.
-        mOpenCvCameraView = (CameraBridgeViewBase)findViewById(R.id.CameraView);
+        launchCamera();
+
+        //フルスクリーン化
+        enableFullscreen();
+    }
+
+    //
+    public void launchCamera() {
+        mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.CameraView);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
+
+    // ナビゲーションバーを隠す
+    public void enableFullscreen() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
+
+    // カメラ権限確認と取得
+    public int checkCameraPermission() {
+        Log.d("checkCameraPermission","run");
+        final int REQUEST_CODE = 1;
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.CAMERA
+            }, REQUEST_CODE);
+        }
+        else {
+            Log.d("checkCameraPermission","OK");
+        }
+
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+    }
+
     // Load a network.
     public void onCameraViewStarted(int width, int height) {
         String proto = getPath("MobileNetSSD_deploy.prototxt", this);
@@ -99,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 // Draw background for label.
                 Imgproc.rectangle(frame, new Point(left, top - labelSize.height),
                         new Point(left + labelSize.width, top + baseLine[0]),
-                        new Scalar(255, 255, 255), 1);
+                        new Scalar(255, 255, 255), -1);
                 // Write class name and confidence.
                 Imgproc.putText(frame, label, new Point(left, top),
                         Core.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 0, 0));
