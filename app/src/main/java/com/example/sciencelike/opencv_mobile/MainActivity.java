@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         Log.i(TAG, "Network loaded successfully");
     }
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        final int IN_WIDTH = 300;
-        final int IN_HEIGHT = 300;
+        final int IN_WIDTH = 224;
+        final int IN_HEIGHT = 224;
         final float WH_RATIO = (float)IN_WIDTH / IN_HEIGHT;
         final double IN_SCALE_FACTOR = 0.007843;
         final double MEAN_VAL = 127.5;
