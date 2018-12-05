@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         enableFullscreen();
     }
 
-    //
+    // カメラ起動
     public void launchCamera() {
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.CameraView);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
