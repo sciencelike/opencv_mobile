@@ -24,7 +24,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.jar.Pack200;
 
 // フルスクリーン表示のために追加
 import android.view.View;
@@ -33,7 +32,6 @@ import android.view.View;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.ActivityCompat;
 import android.Manifest;
-import android.os.AsyncTask;
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Initialize OpenCV manager.
