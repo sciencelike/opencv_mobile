@@ -3,7 +3,6 @@ package com.example.sciencelike.opencv_mobile;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // Forward image through network.
         Mat blob = Dnn.blobFromImage(frame, IN_SCALE_FACTOR,
                 new Size(IN_WIDTH, IN_HEIGHT),
-                new Scalar(MEAN_VAL, MEAN_VAL, MEAN_VAL), /*swapRB*/false, /*crop*/false);
+                new Scalar(MEAN_VAL, MEAN_VAL, MEAN_VAL),false,false);
         net.setInput(blob);
         Mat detections = net.forward();
         int cols = frame.cols();
