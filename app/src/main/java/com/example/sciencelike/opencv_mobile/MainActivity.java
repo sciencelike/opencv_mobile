@@ -3,6 +3,7 @@ package com.example.sciencelike.opencv_mobile;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -87,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     public void launchCamera() {
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.CameraView);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
+        // ここでカメラの最大解像度を設定する
+        mOpenCvCameraView.setMaxFrameSize(480, 320);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
@@ -96,28 +99,12 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
-    // カメラ権限確認と取得
-    public int checkCameraPermission() {
-        Log.d("checkCameraPermission","run");
-        final int REQUEST_CODE = 1;
-
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.CAMERA
-            }, REQUEST_CODE);
-        }
-        else {
-            Log.d("checkCameraPermission","OK");
-        }
-
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-    }
-
     // Load a network.
     public void onCameraViewStarted(int width, int height) {
         String proto = getPath("MobileNetSSD_deploy.prototxt", this);
         String weights = getPath("MobileNetSSD_deploy.caffemodel", this);
+        // String proto = getPath("pose_deploy.prototxt", this);
+        // String weights = getPath("pose_iter_102000.caffemodel", this);
         net = Dnn.readNetFromCaffe(proto, weights);
         Log.i(TAG, "Network loaded successfully");
     }
