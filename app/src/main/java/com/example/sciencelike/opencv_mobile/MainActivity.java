@@ -14,11 +14,10 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-import org.opencv.core.Size;
 import org.opencv.dnn.Net;
-import org.opencv.dnn.Dnn;
 import org.opencv.imgproc.Imgproc;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -32,6 +31,8 @@ import android.view.View;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.ActivityCompat;
 import android.Manifest;
+
+import static org.opencv.core.Core.inRange;
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Initialize OpenCV manager.
@@ -85,10 +86,10 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     // カメラ起動
     public void launchCamera() {
-        mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.CameraView);
+        mOpenCvCameraView = findViewById(R.id.CameraView);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         // ここでカメラの最大解像度を設定する
-        mOpenCvCameraView.setMaxFrameSize(480, 320);
+        mOpenCvCameraView.setMaxFrameSize(600, 600);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
@@ -100,55 +101,31 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     // Load a network.
     public void onCameraViewStarted(int width, int height) {
-        String proto = getPath("MobileNetSSD_deploy.prototxt", this);
-        String weights = getPath("MobileNetSSD_deploy.caffemodel", this);
-        // String proto = getPath("pose_deploy.prototxt", this);
-        // String weights = getPath("pose_iter_102000.caffemodel", this);
-        net = Dnn.readNetFromCaffe(proto, weights);
-        Log.i(TAG, "Network loaded successfully");
+        Log.i(TAG, "Camera view start");
     }
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
+        /*
         final int IN_WIDTH = 224;
         final int IN_HEIGHT = 224;
         final float WH_RATIO = (float)IN_WIDTH / IN_HEIGHT;
         final double IN_SCALE_FACTOR = 0.007843;
         final double MEAN_VAL = 127.5;
         final double THRESHOLD = 0.2;
+        */
+        Scalar RECT_COLOR = new Scalar(0,255,0);
+
         // Get a new frame
         Mat frame = inputFrame.rgba();
-        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2RGB);
-        // Forward image through network.
-        Mat blob = Dnn.blobFromImage(frame, IN_SCALE_FACTOR,
-                new Size(IN_WIDTH, IN_HEIGHT),
-                new Scalar(MEAN_VAL, MEAN_VAL, MEAN_VAL),false,false);
-        net.setInput(blob);
-        Mat detections = net.forward();
-        int cols = frame.cols();
-        int rows = frame.rows();
-        detections = detections.reshape(1, (int)detections.total() / 7);
-        for (int i = 0; i < detections.rows(); ++i) {
-            double confidence = detections.get(i, 2)[0];
-            if (confidence > THRESHOLD) {
-                int classId = (int)detections.get(i, 1)[0];
-                int left   = (int)(detections.get(i, 3)[0] * cols);
-                int top    = (int)(detections.get(i, 4)[0] * rows);
-                int right  = (int)(detections.get(i, 5)[0] * cols);
-                int bottom = (int)(detections.get(i, 6)[0] * rows);
-                // Draw rectangle around detected object.
-                Imgproc.rectangle(frame, new Point(left, top), new Point(right, bottom),
-                        new Scalar(0, 255, 0));
-                String label = classNames[classId] + ": " + confidence;
-                int[] baseLine = new int[1];
-                Size labelSize = Imgproc.getTextSize(label, Core.FONT_HERSHEY_SIMPLEX, 0.5, 1, baseLine);
-                // Draw background for label.
-                Imgproc.rectangle(frame, new Point(left, top - labelSize.height),
-                        new Point(left + labelSize.width, top + baseLine[0]),
-                        new Scalar(255, 255, 255), -1);
-                // Write class name and confidence.
-                Imgproc.putText(frame, label, new Point(left, top),
-                        Core.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 0, 0));
-            }
+        // 参考先
+        // https://qiita.com/yokobonbon/items/c363502df0d3eddf97b4
+        MatOfPoint maxArea = SkinDetector.getInstance().getMaxSkinArea(frame);
+        // Imgproc.cvtColor(frame, frame,Imgproc.COLOR_RGB2HSV);
+        // Core.inRange(frame, new Scalar(0, 60, 80), new Scalar(20, 200, 230), frame);
+        if (maxArea != null) {
+            Rect rectOfArea = Imgproc.boundingRect(maxArea);
+            Imgproc.rectangle(frame, rectOfArea.tl(), rectOfArea.br(), RECT_COLOR, 3);
         }
+
         return frame;
     }
     public void onCameraViewStopped() {}
