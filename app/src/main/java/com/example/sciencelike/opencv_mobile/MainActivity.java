@@ -14,15 +14,16 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-import org.opencv.dnn.Net;
 import org.opencv.imgproc.Imgproc;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 // フルスクリーン表示のために追加
 import android.view.View;
@@ -31,8 +32,6 @@ import android.view.View;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.ActivityCompat;
 import android.Manifest;
-
-import static org.opencv.core.Core.inRange;
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Initialize OpenCV manager.
@@ -119,12 +118,28 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // 参考先
         // https://qiita.com/yokobonbon/items/c363502df0d3eddf97b4
         MatOfPoint maxArea = SkinDetector.getInstance().getMaxSkinArea(frame);
-        // Imgproc.cvtColor(frame, frame,Imgproc.COLOR_RGB2HSV);
-        // Core.inRange(frame, new Scalar(0, 60, 80), new Scalar(20, 200, 230), frame);
         if (maxArea != null) {
             Rect rectOfArea = Imgproc.boundingRect(maxArea);
             Imgproc.rectangle(frame, rectOfArea.tl(), rectOfArea.br(), RECT_COLOR, 3);
         }
+
+        // https://qiita.com/gutugutu3030/items/3907530ee49433420b37 http://imoto-yuya.hatenablog.com/entry/2017/03/12/123357 参考
+
+        Scalar sLowerb = new Scalar(0, 60, 70);
+        Scalar sUpperrb = new Scalar(20, 200, 230);
+        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV);
+        Imgproc.medianBlur(frame, frame, 3);
+        Core.inRange(frame, sLowerb, sUpperrb, frame);
+
+        ArrayList<MatOfPoint> contour = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(frame, contour, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_NONE);
+
+        Imgproc.drawContours(frame, contour, -1, RECT_COLOR);
+
+        // MatOfInt hull = new MatOfInt();
+        // MatOfPoint contour = contour
+        //Imgproc.convexHull(frame, hull);
 
         return frame;
     }
@@ -151,13 +166,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         }
         return "";
     }
-    private static final String TAG = "OpenCV/Sample/MobileNet";
-    private static final String[] classNames = {"background",
-            "aeroplane", "bicycle", "bird", "boat",
-            "bottle", "bus", "car", "cat", "chair",
-            "cow", "diningtable", "dog", "horse",
-            "motorbike", "person", "pottedplant",
-            "sheep", "sofa", "train", "tvmonitor"};
-    private Net net;
+    private static final String TAG = "OpenCV/HandRecognition";
     private CameraBridgeViewBase mOpenCvCameraView;
 }

@@ -17,7 +17,7 @@ public class SkinDetector {
     private static Scalar sUpperrb;
 
     private SkinDetector() {
-        sLowerb = new Scalar(0, 60, 80);
+        sLowerb = new Scalar(0, 60, 70);
         sUpperrb = new Scalar(20, 200, 230);
     }
 
@@ -40,7 +40,7 @@ public class SkinDetector {
 
         Core.inRange(hsv, sLowerb, sUpperrb, hsv);
 
-        ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+        ArrayList<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat(hsv.cols(), hsv.rows(), CvType.CV_32SC1);
         Imgproc.findContours(hsv, contours, hierarchy, Imgproc.RETR_LIST,
                 Imgproc.CHAIN_APPROX_NONE);
