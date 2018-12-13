@@ -33,6 +33,7 @@ import android.view.View;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.ActivityCompat;
 import android.Manifest;
+import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Initialize OpenCV manager.
@@ -82,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         //フルスクリーン化
         enableFullscreen();
+
+        // 画面消灯を無効化する
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     // カメラ起動
@@ -112,27 +116,35 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         final double MEAN_VAL = 127.5;
         final double THRESHOLD = 0.2;
         */
+
+        /*
+        // matをコピーしたいときはこうする
+        new Mat();
+        Mat frame_mat = frame.clone();
+        */
+
         Scalar RECT_COLOR = new Scalar(0,255,0);
-        Scalar LINE_COLOR = new Scalar(0,255,0);
+        Scalar LINE_COLOR_R = new Scalar(255,0,0);
+        Scalar LINE_COLOR_G = new Scalar(0,255,0);
+        Scalar LINE_COLOR_B = new Scalar(0,0,255);
 
         // Get a new frame
         Mat frame = inputFrame.rgba();
 
         // 参考先
         // https://qiita.com/yokobonbon/items/c363502df0d3eddf97b4
-        List<MatOfPoint> maxArea = new ArrayList<>();
-        maxArea.add(OutlineDetector.getInstance().getLineData(frame));
+        // https://qiita.com/gutugutu3030/items/3907530ee49433420b37
+        // http://imoto-yuya.hatenablog.com/entry/2017/03/12/123357
+        // https://docs.opencv.org/3.4/d7/d1d/tutorial_hull.html
+        List<MatOfPoint> maxArea = OutlineDetector.getInstance().getLineData(frame);
 
         if (maxArea.size() > 0) {
+            // SkinDetectorのときのコード
             // Rect rectOfArea = Imgproc.boundingRect(maxArea);
             // Imgproc.rectangle(frame, rectOfArea.tl(), rectOfArea.br(), RECT_COLOR, 3);
-            Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR);
+
+            Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_R);
         }
-
-        // https://qiita.com/gutugutu3030/items/3907530ee49433420b37 http://imoto-yuya.hatenablog.com/entry/2017/03/12/123357 参考
-
-        new Mat();
-        Mat frame_mat = frame.clone();
 
         return frame;
     }
