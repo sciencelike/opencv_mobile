@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 // フルスクリーン表示のために追加
 import android.view.View;
@@ -112,34 +113,26 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         final double THRESHOLD = 0.2;
         */
         Scalar RECT_COLOR = new Scalar(0,255,0);
+        Scalar LINE_COLOR = new Scalar(0,255,0);
 
         // Get a new frame
         Mat frame = inputFrame.rgba();
+
         // 参考先
         // https://qiita.com/yokobonbon/items/c363502df0d3eddf97b4
-        MatOfPoint maxArea = SkinDetector.getInstance().getMaxSkinArea(frame);
-        if (maxArea != null) {
-            Rect rectOfArea = Imgproc.boundingRect(maxArea);
-            Imgproc.rectangle(frame, rectOfArea.tl(), rectOfArea.br(), RECT_COLOR, 3);
+        List<MatOfPoint> maxArea = new ArrayList<>();
+        maxArea.add(OutlineDetector.getInstance().getLineData(frame));
+
+        if (maxArea.size() > 0) {
+            // Rect rectOfArea = Imgproc.boundingRect(maxArea);
+            // Imgproc.rectangle(frame, rectOfArea.tl(), rectOfArea.br(), RECT_COLOR, 3);
+            Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR);
         }
 
         // https://qiita.com/gutugutu3030/items/3907530ee49433420b37 http://imoto-yuya.hatenablog.com/entry/2017/03/12/123357 参考
 
-        Scalar sLowerb = new Scalar(0, 60, 70);
-        Scalar sUpperrb = new Scalar(20, 200, 230);
-        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV);
-        Imgproc.medianBlur(frame, frame, 3);
-        Core.inRange(frame, sLowerb, sUpperrb, frame);
-
-        ArrayList<MatOfPoint> contour = new ArrayList<>();
-        Mat hierarchy = new Mat();
-        Imgproc.findContours(frame, contour, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_NONE);
-
-        Imgproc.drawContours(frame, contour, -1, RECT_COLOR);
-
-        // MatOfInt hull = new MatOfInt();
-        // MatOfPoint contour = contour
-        //Imgproc.convexHull(frame, hull);
+        new Mat();
+        Mat frame_mat = frame.clone();
 
         return frame;
     }
