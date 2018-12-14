@@ -136,14 +136,19 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // https://qiita.com/gutugutu3030/items/3907530ee49433420b37
         // http://imoto-yuya.hatenablog.com/entry/2017/03/12/123357
         // https://docs.opencv.org/3.4/d7/d1d/tutorial_hull.html
-        List<MatOfPoint> maxArea = OutlineDetector.getInstance().getLineData(frame);
+        MatOfPoint contours = ContoursDetector.getInstance().getContoursData(frame);
+        List<MatOfPoint> maxArea = new ArrayList<>();
+        if (contours != null) {
+            maxArea = OutlineDetector.getInstance().getLineData(contours);
+        }
+        // Imgproc.convexityDefects(maxArea, );
 
         if (maxArea.size() > 0) {
             // SkinDetectorのときのコード
             // Rect rectOfArea = Imgproc.boundingRect(maxArea);
             // Imgproc.rectangle(frame, rectOfArea.tl(), rectOfArea.br(), RECT_COLOR, 3);
-
             Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_R);
+
         }
 
         return frame;
