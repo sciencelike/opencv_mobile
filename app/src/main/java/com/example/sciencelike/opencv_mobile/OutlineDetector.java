@@ -34,7 +34,6 @@ public class OutlineDetector {
             throw new IllegalArgumentException("parameter must not be null");
         }
 
-
         List<MatOfPoint> hullList = new ArrayList<>();
         MatOfInt hull = new MatOfInt();
         Imgproc.convexHull(contours, hull);

@@ -15,6 +15,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.MatOfInt4;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -108,21 +109,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         Log.i(TAG, "Camera view start");
     }
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        /*
-        final int IN_WIDTH = 224;
-        final int IN_HEIGHT = 224;
-        final float WH_RATIO = (float)IN_WIDTH / IN_HEIGHT;
-        final double IN_SCALE_FACTOR = 0.007843;
-        final double MEAN_VAL = 127.5;
-        final double THRESHOLD = 0.2;
-        */
-
-        /*
-        // matをコピーしたいときはこうする
-        new Mat();
-        Mat frame_mat = frame.clone();
-        */
-
         Scalar RECT_COLOR = new Scalar(0,255,0);
         Scalar LINE_COLOR_R = new Scalar(255,0,0);
         Scalar LINE_COLOR_G = new Scalar(0,255,0);
@@ -136,18 +122,22 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // https://qiita.com/gutugutu3030/items/3907530ee49433420b37
         // http://imoto-yuya.hatenablog.com/entry/2017/03/12/123357
         // https://docs.opencv.org/3.4/d7/d1d/tutorial_hull.html
+
         MatOfPoint contours = ContoursDetector.getInstance().getContoursData(frame);
         List<MatOfPoint> maxArea = new ArrayList<>();
+        MatOfInt hull = new MatOfInt();
         if (contours != null) {
             maxArea = OutlineDetector.getInstance().getLineData(contours);
+            Imgproc.convexHull(contours, hull);
         }
-        // Imgproc.convexityDefects(maxArea, );
 
         if (maxArea.size() > 0) {
-            // SkinDetectorのときのコード
-            // Rect rectOfArea = Imgproc.boundingRect(maxArea);
             // Imgproc.rectangle(frame, rectOfArea.tl(), rectOfArea.br(), RECT_COLOR, 3);
-            Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_R);
+            List<MatOfPoint> temp = new ArrayList<>();
+            temp.add(contours);
+            Imgproc.drawContours(frame, temp, -1, LINE_COLOR_R);
+            Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
+            ConvexityDefects.convexityDefects(frame, contours, hull, LINE_COLOR_B);
 
         }
 
