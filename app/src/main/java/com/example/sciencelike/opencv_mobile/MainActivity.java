@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // フルスクリーン表示のために追加
+import android.view.MotionEvent;
 import android.view.View;
 
 // カメラ権限関連
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         Scalar LINE_COLOR_B = new Scalar(0,0,255);
 
         // Get a new frame
-        Mat frame = inputFrame.rgba();
+        frame = inputFrame.rgba();
 
         // 参考先
         // https://qiita.com/yokobonbon/items/c363502df0d3eddf97b4
@@ -138,11 +139,30 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             Imgproc.drawContours(frame, temp, -1, LINE_COLOR_R);
             Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
             ConvexityDefects.convexityDefects(frame, contours, hull, LINE_COLOR_B);
-
         }
+
+        // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV);
 
         return frame;
     }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        int cols = frame.cols();
+        int rows = frame.rows();
+
+        int xOffset = (mOpenCvCameraView.getWidth() - cols) / 2;
+        int yOffset = (mOpenCvCameraView.getHeight() - rows) / 2;
+
+        int x = (int)event.getX() - xOffset;
+        int y = (int)event.getY() - yOffset;
+
+        Log.i(TAG, "Touch image point: (" + x + ", " + y + ")");
+
+        // Imgproc.draw
+
+        return false;
+    }
+
     public void onCameraViewStopped() {}
     // Upload file to storage and return a path.
     private static String getPath(String file, Context context) {
@@ -168,4 +188,5 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     }
     private static final String TAG = "OpenCV/HandRecognition";
     private CameraBridgeViewBase mOpenCvCameraView;
+    public Mat frame;
 }

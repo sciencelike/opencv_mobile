@@ -24,7 +24,14 @@ public class ConvexityDefects {
         MatOfInt4 convexityDefects = new MatOfInt4();
         Imgproc.convexityDefects(contour, hull, convexityDefects);
         // null check 入れる
-        int cd[] = convexityDefects.toArray();
+        int cd[] = {0};
+        try {
+            cd = convexityDefects.toArray();
+        }
+        catch (RuntimeException e) {
+            Log.i("ConvexityDefects","catch RuntimeException");
+        }
+
         if(cd==null)return;
         for (int i = 0; i < cd.length; i += 4) {
             Imgproc.line(img, data[cd[i+2]], data[cd[i+2]], color, 3);

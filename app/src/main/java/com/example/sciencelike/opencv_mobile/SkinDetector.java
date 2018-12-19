@@ -20,7 +20,7 @@ public class SkinDetector {
 
     private SkinDetector() {
         sLowerb = new Scalar(0, 60, 70);
-        sUpperrb = new Scalar(25, 200, 230);
+        sUpperrb = new Scalar(25, 255, 255);
     }
 
     public static SkinDetector getInstance() {
