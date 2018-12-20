@@ -32,9 +32,15 @@ public class ConvexityDefects {
             Log.i("ConvexityDefects","catch RuntimeException");
         }
 
-        if(cd==null)return;
+        if(cd==null || cd.length <= 0) return;
         for (int i = 0; i < cd.length; i += 4) {
-            Imgproc.line(img, data[cd[i+2]], data[cd[i+2]], color, 3);
+            try {
+                Imgproc.line(img, data[cd[i + 2]], data[cd[i + 2]], color, 3);
+            }
+            catch (ArrayIndexOutOfBoundsException e) {
+                Log.i("ConvexityDefects", e.toString());
+                return;
+            }
         }
     }
 }

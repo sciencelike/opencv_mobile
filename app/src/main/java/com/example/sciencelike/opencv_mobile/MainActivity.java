@@ -12,6 +12,7 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import android.widget.Toast;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
@@ -36,6 +37,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.app.ActivityCompat;
 import android.Manifest;
 import android.view.WindowManager;
+
+import org.opencv.core.CvType;
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Initialize OpenCV manager.
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     // ナビゲーションバーを隠す
     public void enableFullscreen() {
         View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
     // Load a network.
@@ -147,18 +150,30 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        int cols = frame.cols();
-        int rows = frame.rows();
+        if( event.getAction() == MotionEvent.ACTION_DOWN ) {
+            // int cols = frame.cols();
+            // int rows = frame.rows();
 
-        int xOffset = (mOpenCvCameraView.getWidth() - cols) / 2;
-        int yOffset = (mOpenCvCameraView.getHeight() - rows) / 2;
+            double tscale = (double)mOpenCvCameraView.getWidth() / (double)frame.cols();
 
-        int x = (int)event.getX() - xOffset;
-        int y = (int)event.getY() - yOffset;
+            double xx = (int)event.getX() / tscale;
+            double yy =(int)event.getY() / tscale;
 
-        Log.i(TAG, "Touch image point: (" + x + ", " + y + ")");
+            int x = (int)xx;
+            int y = (int)yy;
 
-        // Imgproc.draw
+            // Mat temp = new Mat();
+            // frame.convertTo(temp, CvType.CV_8UC3);
+
+            Context context = getApplicationContext();
+            byte[] data = new byte[frame.channels()];
+            frame.get(x, y, data);
+            Log.i(TAG, "Touch image point: (" + x + ", " + y + ")");
+            Toast.makeText(context, " Touch image point: (" + x + ", " + y + ")\n" + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT).show();
+            // int type = frame.type();
+            //Toast.makeText(context, String.valueOf(type), Toast.LENGTH_SHORT).show();
+            // Imgproc.draw
+        }
 
         return false;
     }
