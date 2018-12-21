@@ -32,6 +32,10 @@ public class ContoursDetector {
         return sInstance;
     }
 
+    public static void setSkinColorRange(int h_u, int h_l, int s_u, int s_l, int v_u, int v_l) {
+
+    }
+
     static MatOfPoint getContoursData(Mat rgba) {
         if (rgba == null) {
             throw new IllegalArgumentException("parameter must not be null");

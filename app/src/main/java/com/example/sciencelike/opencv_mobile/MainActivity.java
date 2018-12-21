@@ -3,6 +3,7 @@ package com.example.sciencelike.opencv_mobile;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         mOpenCvCameraView = findViewById(R.id.CameraView);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         // ここでカメラの最大解像度を設定する
-        mOpenCvCameraView.setMaxFrameSize(600, 600);
+        mOpenCvCameraView.setMaxFrameSize(1000, 1000);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     public void onCameraViewStarted(int width, int height) {
         Log.i(TAG, "Camera view start");
     }
+
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         Scalar RECT_COLOR = new Scalar(0,255,0);
         Scalar LINE_COLOR_R = new Scalar(255,0,0);
@@ -127,16 +129,15 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // http://imoto-yuya.hatenablog.com/entry/2017/03/12/123357
         // https://docs.opencv.org/3.4/d7/d1d/tutorial_hull.html
 
-        MatOfPoint contours = ContoursDetector.getInstance().getContoursData(frame);
+        MatOfPoint contours = SkinDetector.getMaxSkinArea(frame);
         List<MatOfPoint> maxArea = new ArrayList<>();
         MatOfInt hull = new MatOfInt();
         if (contours != null) {
-            maxArea = OutlineDetector.getInstance().getLineData(contours);
+            maxArea = OutlineDetector.getLineData(contours);
             Imgproc.convexHull(contours, hull);
         }
 
         if (maxArea.size() > 0) {
-            // Imgproc.rectangle(frame, rectOfArea.tl(), rectOfArea.br(), RECT_COLOR, 3);
             List<MatOfPoint> temp = new ArrayList<>();
             temp.add(contours);
             Imgproc.drawContours(frame, temp, -1, LINE_COLOR_R);
@@ -144,35 +145,36 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             ConvexityDefects.convexityDefects(frame, contours, hull, LINE_COLOR_B);
         }
 
-        // Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV);
+        OutlineDetector.setSkinMarker(frame, LINE_COLOR_G);
 
         return frame;
     }
 
+
+
     public boolean onTouchEvent(MotionEvent event) {
-        if( event.getAction() == MotionEvent.ACTION_DOWN ) {
-            // int cols = frame.cols();
-            // int rows = frame.rows();
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            int cols = frame.cols();
+            int rows = frame.rows();
 
-            double tscale = (double)mOpenCvCameraView.getWidth() / (double)frame.cols();
+            int xOffset = (mOpenCvCameraView.getWidth() - cols) / 2;
+            int yOffset = (mOpenCvCameraView.getHeight() - rows) / 2;
 
-            double xx = (int)event.getX() / tscale;
-            double yy =(int)event.getY() / tscale;
+            int x = (int)event.getX() - xOffset;
+            int y = (int)event.getY() - yOffset;
 
-            int x = (int)xx;
-            int y = (int)yy;
+            // byte[] data = new byte[frame.channels()];
+
+            byte[] data = OutlineDetector.setSkinColorRange(frame);
 
             // Mat temp = new Mat();
             // frame.convertTo(temp, CvType.CV_8UC3);
 
-            Context context = getApplicationContext();
-            byte[] data = new byte[frame.channels()];
-            frame.get(x, y, data);
-            Log.i(TAG, "Touch image point: (" + x + ", " + y + ")");
-            Toast.makeText(context, " Touch image point: (" + x + ", " + y + ")\n" + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT).show();
-            // int type = frame.type();
-            //Toast.makeText(context, String.valueOf(type), Toast.LENGTH_SHORT).show();
-            // Imgproc.draw
+            Log.i(TAG, "Touch image point: (" + cols/2 + ", " + rows/2 + ")");
+            Toast t = Toast.makeText(this, " Touch image point: (" + cols/2 + ", " + rows/2 + ")\n" + "R:" + Byte.toUnsignedInt(data[0]) + " G:" + Byte.toUnsignedInt(data[1]) + " B:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
+            View v = t.getView();
+            v.setBackgroundColor(Color.rgb((int)data[0], (int)data[1], (int)data[2]));
+            t.show();
         }
 
         return false;
@@ -201,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         }
         return "";
     }
+
     private static final String TAG = "OpenCV/HandRecognition";
     private CameraBridgeViewBase mOpenCvCameraView;
     public Mat frame;
