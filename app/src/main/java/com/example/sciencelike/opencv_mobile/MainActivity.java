@@ -3,7 +3,6 @@ package com.example.sciencelike.opencv_mobile;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,12 +12,16 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+
+import android.view.GestureDetector;
 import android.widget.Toast;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,6 +41,7 @@ import android.view.WindowManager;
 
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
+
     // Initialize OpenCV manager.
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mGestureDetector = new GestureDetector(this, simpleOnGestureListener);
 
         // カメラの権限確認
         Log.d("onCreate","Permisson Check");
@@ -111,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        Scalar RECT_COLOR = new Scalar(0,255,0);
+        Scalar LINE_COLOR_W = new Scalar(255,255,255);
+        Scalar LINE_COLOR_b = new Scalar(0,0,0);
         Scalar LINE_COLOR_R = new Scalar(255,0,0);
         Scalar LINE_COLOR_G = new Scalar(0,255,0);
         Scalar LINE_COLOR_B = new Scalar(0,0,255);
@@ -124,29 +130,59 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // https://qiita.com/gutugutu3030/items/3907530ee49433420b37
         // http://imoto-yuya.hatenablog.com/entry/2017/03/12/123357
         // https://docs.opencv.org/3.4/d7/d1d/tutorial_hull.html
+        // http://www.kochi-tech.ac.jp/library/ron/2011/2011ele/1141009.pdf 指先検出とかいろいろ
 
+        // 目印描画
+        SkinDetector.setSkinMarker(frame, LINE_COLOR_G);
+
+        // 手の最大面積の領域取得 (輪郭ではない)
         MatOfPoint contours = SkinDetector.getMaxSkinArea(frame);
+
         List<MatOfPoint> maxArea = new ArrayList<>();
         MatOfInt hull = new MatOfInt();
+
+        Point point_moment = new Point();
+
         if (contours != null) {
+            // 手の最大面積の輪郭を取得
             maxArea = OutlineDetector.getLineData(contours);
+
+            // 凹点描画のためのhullを取得
             Imgproc.convexHull(contours, hull);
+
+            // 最大面積の輪郭から重心計算
+            point_moment = CalcPoint.calcMoment(contours);
         }
 
         if (maxArea.size() > 0) {
+            // 生最大面積輪郭描画
             List<MatOfPoint> temp = new ArrayList<>();
             temp.add(contours);
             Imgproc.drawContours(frame, temp, -1, LINE_COLOR_R);
-            Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
-            ConvexityDefects.convexityDefects(frame, contours, hull, LINE_COLOR_B);
-        }
 
-        OutlineDetector.setSkinMarker(frame, LINE_COLOR_G);
+            // 先端描画
+            List<Point> point_list_tips = maxArea.get(0).toList();
+            Point point_tips = new Point(point_list_tips.get(0).x, point_list_tips.get(0).y);
+            Imgproc.circle(frame, point_tips, 5, LINE_COLOR_G, 5);
+            for (int i = 1; i < point_list_tips.size(); i++) {
+                point_tips = new Point(point_list_tips.get(i).x, point_list_tips.get(i).y);
+                Imgproc.circle(frame, point_tips, 5, LINE_COLOR_W, 2);
+            }
+            point_tips = new Point(point_list_tips.get(point_list_tips.size()-1).x, point_list_tips.get(point_list_tips.size()-1).y);
+            Imgproc.circle(frame, point_tips, 5, LINE_COLOR_b, 5);
+
+            // 凸包輪郭描画
+            Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
+
+            // 凹点集合描画
+            ConvexityDefects.convexityDefects(frame, contours, hull, LINE_COLOR_B);
+
+            // 重心描画
+            Imgproc.line(frame, point_moment, point_moment, LINE_COLOR_W, 5);
+        }
 
         return frame;
     }
-
-
 
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -161,20 +197,28 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
             // byte[] data = new byte[frame.channels()];
 
-            byte[] data = OutlineDetector.setSkinColorRange(frame);
+            byte[] data = SkinDetector.setSkinColorRange(frame);
 
             // Mat temp = new Mat();
             // frame.convertTo(temp, CvType.CV_8UC3);
 
-            Log.i(TAG, "Touch image point: (" + cols/2 + ", " + rows/2 + ")");
+            // Log.i(TAG, "Touch image point: (" + cols/2 + ", " + rows/2 + ")");
             Toast t = Toast.makeText(this, " Touch image point: (" + cols/2 + ", " + rows/2 + ")\n" + "R:" + Byte.toUnsignedInt(data[0]) + " G:" + Byte.toUnsignedInt(data[1]) + " B:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
-            View v = t.getView();
-            v.setBackgroundColor(Color.rgb((int)data[0], (int)data[1], (int)data[2]));
+            // View v = t.getView();
+            // v.setBackgroundColor(Color.rgb((int)data[0], (int)data[1], (int)data[2]));
             t.show();
         }
 
-        return false;
+        return mGestureDetector.onTouchEvent(event);
     }
+
+    private final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public void onLongPress(MotionEvent event) {
+            Log.i("Gesture","LongPress");
+
+        }
+    };
 
     public void onCameraViewStopped() {}
     // Upload file to storage and return a path.
@@ -202,5 +246,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     private static final String TAG = "OpenCV/HandRecognition";
     private CameraBridgeViewBase mOpenCvCameraView;
+    private GestureDetector mGestureDetector;
     public Mat frame;
 }

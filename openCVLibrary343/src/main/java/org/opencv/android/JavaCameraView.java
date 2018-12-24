@@ -173,6 +173,15 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                         params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
                     }
 
+                    // TODO メモ_ここでfpsを調整できる
+                    /*
+                    List<Integer> supportedPreviewFrameRates = params.getSupportedPreviewFrameRates();
+                    for (int i = 0; i < supportedPreviewFrameRates.size(); i++) {
+                        Log.i(TAG, "SupportedPreviewFrameRates: "+ i + " / rate: " + supportedPreviewFrameRates.get(i));
+                    }
+                    params.setPreviewFrameRate(supportedPreviewFrameRates.get(0));
+                    */
+
                     mCamera.setParameters(params);
                     params = mCamera.getParameters();
 
