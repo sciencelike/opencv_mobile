@@ -42,6 +42,7 @@ public class OutlineDetector {
         int rows = frame.rows();
         int range = rows/6;
         int y = cols/2, x = rows/2;
+        double rangescale = 0.30;
 
         Mat hsv = new Mat(cols, rows, CvType.CV_8U);
 
@@ -65,6 +66,13 @@ public class OutlineDetector {
             if (Byte.toUnsignedInt(hsv_value[i][2]) > v_u) v_u = Byte.toUnsignedInt(hsv_value[i][2]);
             if (Byte.toUnsignedInt(hsv_value[i][2]) < v_l) v_l = Byte.toUnsignedInt(hsv_value[i][2]);
         }
+
+        h_u += rangescale * (h_u + h_l) / 2;
+        h_l -= rangescale * (h_u + h_l) / 2;
+        s_u += rangescale * (s_u + s_l) / 2;
+        s_l -= rangescale * (s_u + s_l) / 2;
+        v_u += rangescale * (v_u + v_l) / 2;
+        v_l -= rangescale * (v_u + v_l) / 2;
 
         SkinDetector.setSkinColorRange(h_u, h_l, s_u, s_l, v_u, v_l);
 

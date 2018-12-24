@@ -14,12 +14,9 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import android.widget.Toast;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfInt4;
 import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import java.io.BufferedInputStream;
@@ -39,7 +36,6 @@ import android.support.v4.app.ActivityCompat;
 import android.Manifest;
 import android.view.WindowManager;
 
-import org.opencv.core.CvType;
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Initialize OpenCV manager.
