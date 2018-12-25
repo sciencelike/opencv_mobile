@@ -492,4 +492,10 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 
         return new Size(calcWidth, calcHeight);
     }
+
+    /*
+    public static void switchCameraFlash() {
+        JavaCameraView.turnCameraFlash();
+    }
+    */
 }
