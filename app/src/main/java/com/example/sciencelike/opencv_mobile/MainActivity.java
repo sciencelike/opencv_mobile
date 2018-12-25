@@ -1,20 +1,26 @@
 package com.example.sciencelike.opencv_mobile;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Toast;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-
-import android.view.GestureDetector;
-import android.widget.Toast;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
@@ -30,14 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // フルスクリーン表示のために追加
-import android.view.MotionEvent;
-import android.view.View;
-
 // カメラ権限関連
-import android.support.v4.content.ContextCompat;
-import android.support.v4.app.ActivityCompat;
-import android.Manifest;
-import android.view.WindowManager;
 
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
@@ -131,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // http://imoto-yuya.hatenablog.com/entry/2017/03/12/123357
         // https://docs.opencv.org/3.4/d7/d1d/tutorial_hull.html
         // http://www.kochi-tech.ac.jp/library/ron/2011/2011ele/1141009.pdf 指先検出とかいろいろ
+        // https://dev.to/amarlearning/finger-detection-and-tracking-using-opencv-and-python-586m 実例
 
         // 目印描画
         SkinDetector.setSkinMarker(frame, LINE_COLOR_G);
@@ -162,14 +162,16 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
             // 先端描画
             List<Point> point_list_tips = maxArea.get(0).toList();
-            Point point_tips = new Point(point_list_tips.get(0).x, point_list_tips.get(0).y);
-            Imgproc.circle(frame, point_tips, 5, LINE_COLOR_G, 5);
-            for (int i = 1; i < point_list_tips.size(); i++) {
-                point_tips = new Point(point_list_tips.get(i).x, point_list_tips.get(i).y);
+            int index_maxdistancefinger = 0;
+            for (int i = 0; i < point_list_tips.size(); i++) {
+                Point point_tips = new Point(point_list_tips.get(i).x, point_list_tips.get(i).y);
                 Imgproc.circle(frame, point_tips, 5, LINE_COLOR_W, 2);
+
+                if(CalcPoint.calcDistance(new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), point_moment) < CalcPoint.calcDistance(point_tips, point_moment)) {
+                    index_maxdistancefinger = i;
+                }
             }
-            point_tips = new Point(point_list_tips.get(point_list_tips.size()-1).x, point_list_tips.get(point_list_tips.size()-1).y);
-            Imgproc.circle(frame, point_tips, 5, LINE_COLOR_b, 5);
+            Imgproc.circle(frame, new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), 5, LINE_COLOR_b, 5);
 
             // 凸包輪郭描画
             Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
@@ -216,7 +218,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         @Override
         public void onLongPress(MotionEvent event) {
             Log.i("Gesture","LongPress");
-
         }
     };
 

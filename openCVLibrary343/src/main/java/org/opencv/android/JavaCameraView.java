@@ -1,7 +1,5 @@
 package org.opencv.android;
 
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -17,6 +15,8 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+
+import java.util.List;
 
 /**
  * This class is an implementation of the Bridge View between OpenCV and Java Camera.
@@ -174,6 +174,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     }
 
                     // TODO メモ_ここでfpsを調整できる
+                    // http://yonayona.biz/yonayona/blog/archives/camera_18.html これでフラッシュつけられる?
                     /*
                     List<Integer> supportedPreviewFrameRates = params.getSupportedPreviewFrameRates();
                     for (int i = 0; i < supportedPreviewFrameRates.size(); i++) {
@@ -181,6 +182,9 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     }
                     params.setPreviewFrameRate(supportedPreviewFrameRates.get(0));
                     */
+
+                    // 試しにホワイトバランス固定
+                    params.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_FLUORESCENT);
 
                     mCamera.setParameters(params);
                     params = mCamera.getParameters();
