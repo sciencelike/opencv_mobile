@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         mOpenCvCameraView = findViewById(R.id.CameraView);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         // ここでカメラの最大解像度を設定する
-        mOpenCvCameraView.setMaxFrameSize(1000, 1000);
+        mOpenCvCameraView.setMaxFrameSize(1280, 720);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 

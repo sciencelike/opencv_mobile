@@ -5,11 +5,45 @@
     xmlns:opencv="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sciencelike.opencv_mobile.MainActivity">
-    <org.opencv.android.JavaCameraView
-        android:id="@+id/CameraView"
+    tools:context="com.example.sciencelike.opencv_mobile.MainActivity"
+
+    android:orientation="horizontal">
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        opencv:show_fps="true"/>
+        android:layout_height="match_parent">
+        <org.opencv.android.JavaCameraView
+            android:id="@+id/CameraView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            opencv:show_fps="true"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            style="?android:attr/buttonBarStyle">
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#96ff0000"
+                android:layout_margin="5dp"
+                style="?android:attr/buttonBarButtonStyle"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#9600ff00"
+                android:layout_margin="5dp"
+                style="?android:attr/buttonBarButtonStyle"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="#960000ff"
+                android:layout_margin="5dp"
+                style="?android:attr/buttonBarButtonStyle"/>
+        </LinearLayout>
+    </FrameLayout>
+
 </FrameLayout>
