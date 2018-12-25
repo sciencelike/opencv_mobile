@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     private final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
         public void onLongPress(MotionEvent event) {
-            Log.i("Gesture","LongPress");
+            Log.i("Gesture","LongPress ");
         }
     };
 
