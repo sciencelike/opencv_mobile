@@ -22,27 +22,39 @@
             android:layout_height="50dp"
             android:layout_gravity="bottom"
             style="?android:attr/buttonBarStyle">
+
             <Button
+                android:id="@+id/Button_r"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="#96ff0000"
-                android:layout_margin="5dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:onClick="button_click"
+                android:text="@string/button_txt_off" />
+
             <Button
+                android:id="@+id/Button_g"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="#9600ff00"
-                android:layout_margin="5dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:onClick="button_click"
+                android:text="@string/button_txt_off" />
+
             <Button
+                android:id="@+id/Button_b"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:background="#960000ff"
                 android:layout_margin="5dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:layout_weight="1"
+                android:background="#960000ff"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off" />
         </LinearLayout>
     </FrameLayout>
 

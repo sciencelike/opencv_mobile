@@ -13,6 +13,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -112,6 +113,33 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     // Load a network.
     public void onCameraViewStarted(int width, int height) {
         Log.i(TAG, "Camera view start");
+    }
+
+    // 暫定的ボタン対応
+    public void button_click (View view) {
+        final String s_on = getResources().getString(R.string.button_txt_on);
+        final String s_off = getResources().getString(R.string.button_txt_off);
+
+        switch (view.getId()) {
+            case R.id.Button_r:
+                final Button button_r = findViewById(R.id.Button_r);
+                if (button_r.getText().equals(s_off))
+                    ((Button) findViewById(R.id.Button_r)).setText(s_on);
+                else ((Button) findViewById(R.id.Button_r)).setText(s_off);
+                break;
+            case R.id.Button_g:
+                final Button button_g = findViewById(R.id.Button_r);
+                if (button_g.getText().equals(s_off))
+                    ((Button) findViewById(R.id.Button_r)).setText(s_on);
+                else ((Button) findViewById(R.id.Button_r)).setText(s_off);
+                break;
+            case R.id.Button_b:
+                final Button button_b = findViewById(R.id.Button_r);
+                if (button_b.getText().equals(s_off))
+                    ((Button) findViewById(R.id.Button_r)).setText(s_on);
+                else ((Button) findViewById(R.id.Button_r)).setText(s_off);
+                break;
+        }
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
