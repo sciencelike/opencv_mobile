@@ -9,16 +9,14 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/gvr-android-sdk/libraries" />
-            <option value="$PROJECT_DIR$/gvr-android-sdk/libraries/audio" />
-            <option value="$PROJECT_DIR$/gvr-android-sdk/libraries/base" />
-            <option value="$PROJECT_DIR$/gvr-android-sdk/libraries/common" />
-            <option value="$PROJECT_DIR$/gvr-android-sdk/libraries/commonwidget" />
-            <option value="$PROJECT_DIR$/gvr-android-sdk/libraries/panowidget" />
-            <option value="$PROJECT_DIR$/gvr-android-sdk/libraries/videowidget" />
             <option value="$PROJECT_DIR$/openCVLibrary343" />
             <option value="$PROJECT_DIR$/samples" />
+            <option value="$PROJECT_DIR$/samples/sdk-controllerclient" />
+            <option value="$PROJECT_DIR$/samples/sdk-hellovr" />
+            <option value="$PROJECT_DIR$/samples/sdk-simplepanowidget" />
             <option value="$PROJECT_DIR$/samples/sdk-simplevideowidget" />
+            <option value="$PROJECT_DIR$/samples/sdk-video360" />
+            <option value="$PROJECT_DIR$/samples/sdk-videoplayer" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,10 +1,2 @@
-include ':app', ':samples:sdk-simplevideowidget'
+include ':app', ':samples:sdk-video360', ':samples:sdk-controllerclient', ':samples:sdk-videoplayer', ':samples:sdk-simplevideowidget', ':samples:sdk-simplepanowidget', ':samples:sdk-hellovr'
 include ':openCVLibrary343'
-
-include ':app'
-include ':gvr-android-sdk/libraries:audio'
-include ':gvr-android-sdk/libraries:base'
-include ':gvr-android-sdk/libraries:common'
-include ':gvr-android-sdk/libraries:commonwidget'
-include ':gvr-android-sdk/libraries:panowidget'
-include ':gvr-android-sdk/libraries:videowidget'
