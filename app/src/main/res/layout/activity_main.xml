@@ -17,11 +17,12 @@
             android:layout_height="match_parent"
             android:visibility="visible"
             opencv:show_fps="true"/>
+
         <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_gravity="bottom"
-            style="?android:attr/buttonBarStyle">
+            android:layout_gravity="top">
 
             <Button
                 android:id="@+id/Button_r"

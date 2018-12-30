@@ -27,6 +27,7 @@ import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.BufferedInputStream;
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         mOpenCvCameraView = findViewById(R.id.CameraView);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         // ここでカメラの最大解像度を設定する
-        mOpenCvCameraView.setMaxFrameSize(1280, 720);
+        mOpenCvCameraView.setMaxFrameSize(960, 540);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
@@ -210,6 +211,10 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             // 重心描画
             Imgproc.line(frame, point_moment, point_moment, LINE_COLOR_W, 5);
         }
+
+        Mat frame_canny = new Mat();
+        Imgproc.cvtColor(frame, frame_canny, Imgproc.COLOR_RGB2GRAY);
+
 
         return frame;
     }
