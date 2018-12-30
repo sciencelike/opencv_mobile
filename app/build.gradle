@@ -27,5 +27,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':openCVLibrary343')
 
-
+    implementation 'com.google.vr:sdk-common:1.180.0'
+    implementation 'com.google.vr:sdk-commonwidget:1.180.0'
+    implementation 'com.google.vr:sdk-panowidget:1.180.0'
 }
