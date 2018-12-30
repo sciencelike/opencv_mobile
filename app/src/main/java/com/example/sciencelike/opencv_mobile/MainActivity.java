@@ -129,16 +129,16 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 else ((Button) findViewById(R.id.Button_r)).setText(s_off);
                 break;
             case R.id.Button_g:
-                final Button button_g = findViewById(R.id.Button_r);
+                final Button button_g = findViewById(R.id.Button_g);
                 if (button_g.getText().equals(s_off))
-                    ((Button) findViewById(R.id.Button_r)).setText(s_on);
-                else ((Button) findViewById(R.id.Button_r)).setText(s_off);
+                    ((Button) findViewById(R.id.Button_g)).setText(s_on);
+                else ((Button) findViewById(R.id.Button_g)).setText(s_off);
                 break;
             case R.id.Button_b:
-                final Button button_b = findViewById(R.id.Button_r);
+                final Button button_b = findViewById(R.id.Button_b);
                 if (button_b.getText().equals(s_off))
-                    ((Button) findViewById(R.id.Button_r)).setText(s_on);
-                else ((Button) findViewById(R.id.Button_r)).setText(s_off);
+                    ((Button) findViewById(R.id.Button_b)).setText(s_on);
+                else ((Button) findViewById(R.id.Button_b)).setText(s_off);
                 break;
         }
     }
@@ -230,17 +230,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             int x = (int)event.getX() - xOffset;
             int y = (int)event.getY() - yOffset;
 
-            // byte[] data = new byte[frame.channels()];
-
             byte[] data = SkinDetector.setSkinColorRange(frame);
 
-            // Mat temp = new Mat();
-            // frame.convertTo(temp, CvType.CV_8UC3);
-
-            // Log.i(TAG, "Touch image point: (" + cols/2 + ", " + rows/2 + ")");
             Toast t = Toast.makeText(this, " Touch image point: (" + cols/2 + ", " + rows/2 + ")\n" + "R:" + Byte.toUnsignedInt(data[0]) + " G:" + Byte.toUnsignedInt(data[1]) + " B:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
-            // View v = t.getView();
-            // v.setBackgroundColor(Color.rgb((int)data[0], (int)data[1], (int)data[2]));
             t.show();
         }
 
