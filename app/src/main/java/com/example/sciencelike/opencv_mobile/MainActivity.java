@@ -37,8 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// フルスクリーン表示のために追加
-// カメラ権限関連
+import android.content.Intent;
 
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
@@ -135,10 +134,14 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 else ((Button) findViewById(R.id.Button_g)).setText(s_off);
                 break;
             case R.id.Button_b:
-                final Button button_b = findViewById(R.id.Button_b);
-                if (button_b.getText().equals(s_off))
-                    ((Button) findViewById(R.id.Button_b)).setText(s_on);
-                else ((Button) findViewById(R.id.Button_b)).setText(s_off);
+                // final Button button_b = findViewById(R.id.Button_b);
+                // if (button_b.getText().equals(s_off))
+                //     ((Button) findViewById(R.id.Button_b)).setText(s_on);
+                // else ((Button) findViewById(R.id.Button_b)).setText(s_off);
+
+                Intent intent = new Intent(this, player.class);
+                startActivity(intent);
+                
                 break;
         }
     }

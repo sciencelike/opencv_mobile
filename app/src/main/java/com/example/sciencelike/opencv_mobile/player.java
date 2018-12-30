@@ -14,7 +14,8 @@ public class player extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
-        panoWidgetView = (VrPanoramaView) findViewById(R.id.vr_view);
+        // panoWidgetView = (VrPanoramaView) findViewById(R.id.vr_view);
+        panoWidgetView = findViewById(R.id.vr_view);
 
         loadPanoImage();
     }
@@ -50,7 +51,7 @@ public class player extends AppCompatActivity {
         viewOptions.inputType = VrPanoramaView.Options.TYPE_MONO;
 
         // use the name of the image in the assets/ directory.
-        String panoImageName = "YOUR_PANORAMA_IMAGE_NAME.jpg";
+        String panoImageName = "mountain.jpg";
 
         // create the task passing the widget view and call execute to start.
         task = new ImageLoaderTask(panoWidgetView, viewOptions, panoImageName);
