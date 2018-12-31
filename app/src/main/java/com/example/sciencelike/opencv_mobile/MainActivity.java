@@ -27,7 +27,6 @@ import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
-import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.BufferedInputStream;
@@ -139,9 +138,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 //     ((Button) findViewById(R.id.Button_b)).setText(s_on);
                 // else ((Button) findViewById(R.id.Button_b)).setText(s_off);
 
-                Intent intent = new Intent(this, player.class);
+                Intent intent = new Intent(this, PlayerActivity.class);
                 startActivity(intent);
-                
+
                 break;
         }
     }
@@ -176,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         Point point_moment = new Point();
 
         if (contours != null) {
+            // 面積表示 デバッグ用
+            Log.i("MainActivity",String.valueOf(Imgproc.contourArea(contours)));
+
             // 手の最大面積の輪郭を取得
             maxArea = OutlineDetector.getLineData(contours);
 
@@ -215,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             Imgproc.line(frame, point_moment, point_moment, LINE_COLOR_W, 5);
         }
 
+        // ハフ変換テスト
         Mat frame_canny = new Mat();
         Imgproc.cvtColor(frame, frame_canny, Imgproc.COLOR_RGB2GRAY);
 

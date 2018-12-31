@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
-public class player extends AppCompatActivity {
+public class PlayerActivity extends AppCompatActivity {
     private VrPanoramaView panoWidgetView;
     private ImageLoaderTask backgroundImageLoaderTask;
 
@@ -14,8 +14,8 @@ public class player extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
-        // panoWidgetView = (VrPanoramaView) findViewById(R.id.vr_view);
-        panoWidgetView = findViewById(R.id.vr_view);
+        // panoWidgetView = (VrPanoramaView) findViewById(R.id.player_vrpanoramaview);
+        panoWidgetView = findViewById(R.id.player_vrpanoramaview);
 
         loadPanoImage();
     }

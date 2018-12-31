@@ -59,7 +59,7 @@ public class FpsMeter {
     }
 
     public void draw(Canvas canvas, float offsetx, float offsety) {
-        Log.d(TAG, mStrfps);
+        // Log.d(TAG, mStrfps);
         int xPos = (int) (canvas.getWidth() / 2);
         int yPos = (int) ((canvas.getHeight()) - (mPaint.descent() + mPaint.ascent())/2);
         int padding = 30;

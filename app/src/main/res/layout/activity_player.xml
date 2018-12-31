@@ -6,7 +6,7 @@
     <com.google.vr.sdk.widgets.pano.VrPanoramaView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/vr_view"
+        android:id="@+id/player_vrpanoramaview"
         android:scrollbars="none"/>
 
 </android.support.constraint.ConstraintLayout>
