@@ -1,2 +1,2 @@
-include ':app', ':samples:sdk-video360', ':samples:sdk-controllerclient', ':samples:sdk-videoplayer', ':samples:sdk-simplevideowidget', ':samples:sdk-simplepanowidget', ':samples:sdk-hellovr'
+include ':app', ':samples:sdk-video360', ':samples:sdk-controllerclient', ':samples:sdk-videoplayer', ':samples:sdk-simplevideowidget', ':samples:sdk-simplepanowidget', ':samples:sdk-hellovr', ':samples:sdk-hellovr'
 include ':openCVLibrary343'

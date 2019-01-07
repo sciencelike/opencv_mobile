@@ -43,10 +43,6 @@ import android.content.Intent;
 
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
-    // クリック検出用
-    static int check = 0;
-    static long lastmotionedtime = 0;
-
     // Initialize OpenCV manager.
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -94,10 +90,19 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         launchCamera();
 
         //フルスクリーン化
-        enableFullscreen();
+        // enableFullscreen();
 
         // 画面消灯を無効化する
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
     }
 
     // カメラ起動
@@ -112,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     // ナビゲーションバーを隠す
     public void enableFullscreen() {
         View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
     // Load a network.
@@ -131,27 +136,34 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 if (button_r.getText().equals(s_off))
                     ((Button) findViewById(R.id.Button_r)).setText(s_on);
                 else ((Button) findViewById(R.id.Button_r)).setText(s_off);
+
+                Log.d("MainActivity Button", "Touched Button0");
+
                 break;
             case R.id.Button_g:
-                /*
                 final Button button_g = findViewById(R.id.Button_g);
                 if (button_g.getText().equals(s_off))
                     ((Button) findViewById(R.id.Button_g)).setText(s_on);
                 else ((Button) findViewById(R.id.Button_g)).setText(s_off);
-                */
 
-                Intent intent = new Intent(this, PlayerActivity.class);
-                startActivity(intent);
+                Log.d("MainActivity Button", "Touched Button1");
+                /*
+                Intent intent1 = new Intent(this, SimpleVrVideoActivity.class);
+                startActivity(intent1);
+                */
 
                 break;
             case R.id.Button_b:
-                // final Button button_b = findViewById(R.id.Button_b);
-                // if (button_b.getText().equals(s_off))
-                //     ((Button) findViewById(R.id.Button_b)).setText(s_on);
-                // else ((Button) findViewById(R.id.Button_b)).setText(s_off);
+                final Button button_b = findViewById(R.id.Button_b);
+                if (button_b.getText().equals(s_off))
+                    ((Button) findViewById(R.id.Button_b)).setText(s_on);
+                else ((Button) findViewById(R.id.Button_b)).setText(s_off);
 
+                Log.d("MainActivity Button", "Touched Button2");
+                /*
                 Intent intent2 = new Intent(this, PlayerActivity.class);
                 startActivity(intent2);
+                */
 
                 break;
         }
@@ -231,25 +243,45 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             // Log.i("MainActivity",String.valueOf(Imgproc.contourArea(contours)));
 
             // 実画面とopencv viewのスケーリング
-            float scaling = mOpenCvCameraView.mScale;
-            int x = (int)(point_list_tips.get(index_maxdistancefinger).x * scaling);
-            int y = (int)(point_list_tips.get(index_maxdistancefinger).y * scaling);
+            float x = (float)point_list_tips.get(index_maxdistancefinger).x * mOpenCvCameraView.mScale;
+            float y = (float)point_list_tips.get(index_maxdistancefinger).y * mOpenCvCameraView.mScale;
             if(ConvexityDefects.getPointsNumber() == 0) {
-                Log.i("MainActivity Touchtest"," == 0");
                 check = 1;
             }
             if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+1000) {
-                Log.i("MainActivity Touchtest","Single Touch " + SystemClock.uptimeMillis());
+                Log.i("MainActivity Touchtest","Single Touch " + x + " " + y);
                 lastmotionedtime = SystemClock.uptimeMillis();
-                MotionEvent ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+1, MotionEvent.ACTION_DOWN, x, y, 0);
-                this.onTouchEvent(ev);
-                ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+1, MotionEvent.ACTION_UP, x, y, 0);
-                this.onTouchEvent(ev);
                 check = 0;
+
+                /*
+                MotionEvent ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+50, MotionEvent.ACTION_DOWN, x, y, 0);
+                this.onTouchEvent(ev);
+                ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+50, MotionEvent.ACTION_UP, x, y, 0);
+                this.onTouchEvent(ev);
                 ev.recycle();
+                */
+                
+                int[] location = new int[2];
+                Button button_r = findViewById(R.id.Button_r);
+                Button button_g = findViewById(R.id.Button_g);
+                Button button_b = findViewById(R.id.Button_b);
+                button_r.getLocationInWindow(location);
+                if(x >= location[0] && x <= (location[0]+button_r.getWidth()) && y >= location[1] && y <= (location[1]+button_r.getHeight())) {
+                    Log.i("MainActivity Touchtest", "Touched button_r");
+                    button_click(findViewById(R.id.Button_r));
+                }
+                button_g.getLocationInWindow(location);
+                if(x >= location[0] && x <= (location[0]+button_g.getWidth()) && y >= location[1] && y <= (location[1]+button_g.getHeight())) {
+                    Log.i("MainActivity Touchtest", "Touched button_g");
+                    button_click(findViewById(R.id.Button_g));
+                }
+                button_b.getLocationInWindow(location);
+                if(x >= location[0] && x <= (location[0]+button_b.getWidth()) && y >= location[1] && y <= (location[1]+button_b.getHeight())) {
+                    Log.i("MainActivity Touchtest", "Touched button_b");
+                    button_click(findViewById(R.id.Button_b));
+                }
             }
             if(ConvexityDefects.getPointsNumber() >= 2) {
-                Log.i("MainActivity Touchtest"," >= 2");
                 check = 0;
             }
         }
@@ -270,27 +302,17 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            /*
-            int cols = frame.cols();
-            int rows = frame.rows();
-
-            int xOffset = (mOpenCvCameraView.getWidth() - cols) / 2;
-            int yOffset = (mOpenCvCameraView.getHeight() - rows) / 2;
-
-            int x = (int)event.getX() - xOffset;
-            int y = (int)event.getY() - yOffset;
-
-            byte[] data = SkinDetector.setSkinColorRange(frame);
-
-            Toast t = Toast.makeText(this, " Touch image point: (" + cols/2 + ", " + rows/2 + ")\n" + "R:" + Byte.toUnsignedInt(data[0]) + " G:" + Byte.toUnsignedInt(data[1]) + " B:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
-            t.show();
-            */
         }
 
         return mGestureDetector.onTouchEvent(event);
     }
 
     private final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onDown (MotionEvent event) {
+            Log.i("MainActivity Gesture","Down ");
+            return true;
+        }
         @Override
         public boolean onSingleTapUp(MotionEvent event) {
             Log.i("MainActivity Gesture","SingleTapUp ");
@@ -339,6 +361,10 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         }
         return "";
     }
+
+    // クリック検出用
+    static int check = 0;
+    static long lastmotionedtime = 0;
 
     private static final String TAG = "OpenCV/HandRecognition";
     private CameraBridgeViewBase mOpenCvCameraView;

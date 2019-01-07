@@ -42,10 +42,12 @@ public class ConvexityDefects {
         // 後のために配列化
         int cd[] = {0};
         try {
-            cd = convexityDefects.toArray();
+            if(!convexityDefects.empty()) {
+                cd = convexityDefects.toArray();
+            }
         }
         catch (RuntimeException e) {
-            Log.i("ConvexityDefects","catch RuntimeException");
+            // Log.i("ConvexityDefects","catch RuntimeException");
         }
 
         if(cd==null || cd.length <= 0) return;
@@ -66,7 +68,7 @@ public class ConvexityDefects {
                         Imgproc.line(img, data[cd[i + 2]], data[cd[i + 2]], color, 5);
                     }
                     catch (ArrayIndexOutOfBoundsException e) {
-                        Log.i("ConvexityDefects", e.toString());
+                        // Log.i("ConvexityDefects", e.toString());
                         return;
                     }
                 }
@@ -74,7 +76,7 @@ public class ConvexityDefects {
             points = point;
         }
         catch (ArrayIndexOutOfBoundsException e) {
-            Log.i("ConvexityDefects", e.toString());
+            // Log.i("ConvexityDefects", e.toString());
             return;
         }
     }

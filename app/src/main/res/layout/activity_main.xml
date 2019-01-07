@@ -11,12 +11,13 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <org.opencv.android.JavaCameraView
             android:id="@+id/CameraView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
-            opencv:show_fps="true"/>
+            opencv:show_fps="true" />
 
         <LinearLayout
             style="?android:attr/buttonBarStyle"
@@ -56,7 +57,9 @@
                 android:background="#960000ff"
                 android:onClick="button_click"
                 android:text="@string/button_txt_off" />
+
         </LinearLayout>
+
     </FrameLayout>
 
 </FrameLayout>
