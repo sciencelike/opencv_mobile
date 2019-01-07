@@ -4,11 +4,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.mtp.MtpConstants;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,6 +43,9 @@ import android.content.Intent;
 
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
+    // クリック検出用
+    static int check = 0;
+    static long lastmotionedtime = 0;
 
     // Initialize OpenCV manager.
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -127,10 +133,16 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 else ((Button) findViewById(R.id.Button_r)).setText(s_off);
                 break;
             case R.id.Button_g:
+                /*
                 final Button button_g = findViewById(R.id.Button_g);
                 if (button_g.getText().equals(s_off))
                     ((Button) findViewById(R.id.Button_g)).setText(s_on);
                 else ((Button) findViewById(R.id.Button_g)).setText(s_off);
+                */
+
+                Intent intent = new Intent(this, PlayerActivity.class);
+                startActivity(intent);
+
                 break;
             case R.id.Button_b:
                 // final Button button_b = findViewById(R.id.Button_b);
@@ -138,8 +150,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 //     ((Button) findViewById(R.id.Button_b)).setText(s_on);
                 // else ((Button) findViewById(R.id.Button_b)).setText(s_off);
 
-                Intent intent = new Intent(this, PlayerActivity.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(this, PlayerActivity.class);
+                startActivity(intent2);
 
                 break;
         }
@@ -175,9 +187,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         Point point_moment = new Point();
 
         if (contours != null) {
-            // 面積表示 デバッグ用
-            Log.i("MainActivity",String.valueOf(Imgproc.contourArea(contours)));
-
             // 手の最大面積の輪郭を取得
             maxArea = OutlineDetector.getLineData(contours);
 
@@ -215,18 +224,53 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
             // 重心描画
             Imgproc.line(frame, point_moment, point_moment, LINE_COLOR_W, 5);
+
+
+            // デバッグ用
+            // 手の面積表示
+            // Log.i("MainActivity",String.valueOf(Imgproc.contourArea(contours)));
+
+            // 実画面とopencv viewのスケーリング
+            float scaling = mOpenCvCameraView.mScale;
+            int x = (int)(point_list_tips.get(index_maxdistancefinger).x * scaling);
+            int y = (int)(point_list_tips.get(index_maxdistancefinger).y * scaling);
+            if(ConvexityDefects.getPointsNumber() == 0) {
+                Log.i("MainActivity Touchtest"," == 0");
+                check = 1;
+            }
+            if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+1000) {
+                Log.i("MainActivity Touchtest","Single Touch " + SystemClock.uptimeMillis());
+                lastmotionedtime = SystemClock.uptimeMillis();
+                MotionEvent ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+1, MotionEvent.ACTION_DOWN, x, y, 0);
+                this.onTouchEvent(ev);
+                ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+1, MotionEvent.ACTION_UP, x, y, 0);
+                this.onTouchEvent(ev);
+                check = 0;
+                ev.recycle();
+            }
+            if(ConvexityDefects.getPointsNumber() >= 2) {
+                Log.i("MainActivity Touchtest"," >= 2");
+                check = 0;
+            }
         }
 
+        // TODO 手の輪郭検出→領域少し拡大→マスク作成→Cannyでエッジ検出→ハフ変換で指の直線成分検出→→指の向きを知りたい
+        /*
+        // 参考 https://www.cellstat.net/makemask/ 領域からのマスク作成
         // ハフ変換テスト
         Mat frame_canny = new Mat();
         Imgproc.cvtColor(frame, frame_canny, Imgproc.COLOR_RGB2GRAY);
+        Imgproc.Canny(frame_canny, frame_canny,100, 100);
 
+        return frame_canny;
+        */
 
         return frame;
     }
 
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            /*
             int cols = frame.cols();
             int rows = frame.rows();
 
@@ -240,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
             Toast t = Toast.makeText(this, " Touch image point: (" + cols/2 + ", " + rows/2 + ")\n" + "R:" + Byte.toUnsignedInt(data[0]) + " G:" + Byte.toUnsignedInt(data[1]) + " B:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
             t.show();
+            */
         }
 
         return mGestureDetector.onTouchEvent(event);
@@ -247,8 +292,27 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     private final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
+        public boolean onSingleTapUp(MotionEvent event) {
+            Log.i("MainActivity Gesture","SingleTapUp ");
+            return super.onSingleTapUp(event);
+        }
+        @Override
         public void onLongPress(MotionEvent event) {
-            Log.i("Gesture","LongPress ");
+            Log.i("MainActivity Gesture","LongPress ");
+            int cols = frame.cols();
+            int rows = frame.rows();
+
+            int xOffset = (mOpenCvCameraView.getWidth() - cols) / 2;
+            int yOffset = (mOpenCvCameraView.getHeight() - rows) / 2;
+
+            int x = (int)event.getX() - xOffset;
+            int y = (int)event.getY() - yOffset;
+
+            byte[] data = SkinDetector.setSkinColorRange(frame);
+
+            Context context = getApplicationContext();
+            Toast t = Toast.makeText(context, "MainActivity Touch image point: (" + cols/2 + ", " + rows/2 + ")\n" + "R:" + Byte.toUnsignedInt(data[0]) + " G:" + Byte.toUnsignedInt(data[1]) + " B:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
+            t.show();
         }
     };
 

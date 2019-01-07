@@ -16,6 +16,11 @@ import static com.example.sciencelike.opencv_mobile.CalcPoint.calcMoment;
 
 public class ConvexityDefects {
     static private MatOfInt4 convexityDefects = new MatOfInt4();
+    static private int points = 0;
+
+    static int getPointsNumber() {
+        return points;
+    }
 
     static void convexityDefects(Mat img, MatOfPoint contour, MatOfInt hull, Scalar color) {
         // 凹点描画をする
@@ -30,6 +35,9 @@ public class ConvexityDefects {
         // 凹点計算
         Point data[] = contour.toArray();
         Imgproc.convexityDefects(contour, hull, convexityDefects);
+
+        // 凹点カウント
+        int point=0;
 
         // 後のために配列化
         int cd[] = {0};
@@ -48,6 +56,7 @@ public class ConvexityDefects {
             for (int i = 0; i < cd.length; i += 4) {
                 if ((calcDistance(data[cd[i]], data[cd[i+2]]) + calcDistance(data[cd[i+1]], data[cd[i+2]]))/2 > (calcDistance(data[cd[i]], point_moment) + calcDistance(data[cd[i+1]], point_moment))/2 /3 &&
                 calcAngle(data[cd[i]], data[cd[i+2]], data[cd[i+1]]) < 90) {
+                    point+=1;
                     Imgproc.line(img, data[cd[i]], data[cd[i + 2]], color);
                     Imgproc.line(img, data[cd[i + 1]], data[cd[i + 2]], color);
                     // Log.i("ConvexityDefects","distance " + data[cd[i + 2]].x + " " + data[cd[i + 2]].y);
@@ -62,6 +71,7 @@ public class ConvexityDefects {
                     }
                 }
             }
+            points = point;
         }
         catch (ArrayIndexOutOfBoundsException e) {
             Log.i("ConvexityDefects", e.toString());
