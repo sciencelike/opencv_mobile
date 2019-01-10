@@ -61,16 +61,9 @@ public class ConvexityDefects {
                     point+=1;
                     Imgproc.line(img, data[cd[i]], data[cd[i + 2]], color);
                     Imgproc.line(img, data[cd[i + 1]], data[cd[i + 2]], color);
-                    // Log.i("ConvexityDefects","distance " + data[cd[i + 2]].x + " " + data[cd[i + 2]].y);
 
                     // 凹点描画
-                    try {
-                        Imgproc.line(img, data[cd[i + 2]], data[cd[i + 2]], color, 5);
-                    }
-                    catch (ArrayIndexOutOfBoundsException e) {
-                        // Log.i("ConvexityDefects", e.toString());
-                        return;
-                    }
+                    Imgproc.line(img, data[cd[i + 2]], data[cd[i + 2]], color, 5);
                 }
             }
             points = point;
