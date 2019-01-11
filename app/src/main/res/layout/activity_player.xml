@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:opencv="http://schemas.android.com/apk/res-auto">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
-
-    <com.google.vr.sdk.widgets.pano.VrPanoramaView
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/player_CameraView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/player_vrpanoramaview"
+        android:visibility="invisible"
+        opencv:show_fps="true">
+        
+    </org.opencv.android.JavaCameraView>
+
+    <com.google.vr.sdk.widgets.pano.VrPanoramaView
+        android:id="@+id/player_Vrpanoramaview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scrollbars="none">
 
     </com.google.vr.sdk.widgets.pano.VrPanoramaView>

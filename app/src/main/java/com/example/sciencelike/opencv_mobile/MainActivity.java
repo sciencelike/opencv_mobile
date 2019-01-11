@@ -3,15 +3,12 @@ package com.example.sciencelike.opencv_mobile;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.mtp.MtpConstants;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,10 +29,6 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         Log.d("onCreate","Permisson Check");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             Log.d("onCreate","Permisson Granted");
+            // Set up camera listener.
             launchCamera();
         } else {
             Log.d("onCreate","Permisson Not Found");
@@ -85,12 +79,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                     Manifest.permission.CAMERA
             }, 1);
         }
-
-        // Set up camera listener.
-        launchCamera();
-
-        //フルスクリーン化
-        // enableFullscreen();
 
         // 画面消灯を無効化する
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -114,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
-    // Load a network.
     public void onCameraViewStarted(int width, int height) {
         Log.i(TAG, "Camera view start");
     }
@@ -154,10 +141,10 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 else ((Button) findViewById(R.id.Button_b)).setText(s_off);
 
                 Log.d("MainActivity Button", "Touched Button2");
-                /*
+
                 Intent intent2 = new Intent(this, PlayerActivity.class);
                 startActivity(intent2);
-                */
+
 
                 break;
         }
@@ -242,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             if(ConvexityDefects.getPointsNumber() == 0) {
                 check = 1;
             }
+
+            // クリック判定とボタン動作
             if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+1000) {
                 Log.i("MainActivity Touchtest","Single Touch " + x + " " + y);
                 lastmotionedtime = SystemClock.uptimeMillis();
@@ -254,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 this.onTouchEvent(ev);
                 ev.recycle();
                 */
-                
+
                 int[] location = new int[2];
                 Button button_r = findViewById(R.id.Button_r);
                 Button button_g = findViewById(R.id.Button_g);
@@ -333,28 +322,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     };
 
     public void onCameraViewStopped() {}
-    // Upload file to storage and return a path.
-    private static String getPath(String file, Context context) {
-        AssetManager assetManager = context.getAssets();
-        BufferedInputStream inputStream = null;
-        try {
-            // Read data from assets.
-            inputStream = new BufferedInputStream(assetManager.open(file));
-            byte[] data = new byte[inputStream.available()];
-            inputStream.read(data);
-            inputStream.close();
-            // Create copy file in storage.
-            File outFile = new File(context.getFilesDir(), file);
-            FileOutputStream os = new FileOutputStream(outFile);
-            os.write(data);
-            os.close();
-            // Return a path to file which may be read in common way.
-            return outFile.getAbsolutePath();
-        } catch (IOException ex) {
-            Log.i(TAG, "Failed to upload a file");
-        }
-        return "";
-    }
 
     // クリック検出用
     static int check = 0;
