@@ -2,6 +2,7 @@ package com.example.sciencelike.opencv_mobile;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -31,8 +32,6 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.content.Intent;
 
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
@@ -304,19 +303,11 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         @Override
         public void onLongPress(MotionEvent event) {
             Log.i("MainActivity Gesture","LongPress ");
-            int cols = frame.cols();
-            int rows = frame.rows();
-
-            int xOffset = (mOpenCvCameraView.getWidth() - cols) / 2;
-            int yOffset = (mOpenCvCameraView.getHeight() - rows) / 2;
-
-            int x = (int)event.getX() - xOffset;
-            int y = (int)event.getY() - yOffset;
 
             byte[] data = SkinDetector.setSkinColorRange(frame);
 
             Context context = getApplicationContext();
-            Toast t = Toast.makeText(context, "MainActivity Touch image point: (" + cols/2 + ", " + rows/2 + ")\n" + "R:" + Byte.toUnsignedInt(data[0]) + " G:" + Byte.toUnsignedInt(data[1]) + " B:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
+            Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
             t.show();
         }
     };

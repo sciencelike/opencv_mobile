@@ -1,16 +1,13 @@
 package com.example.sciencelike.opencv_mobile;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Canvas;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -27,7 +24,6 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
-import org.opencv.core.Scalar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +49,6 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
-        // panoWidgetView = (VrPanoramaView) findViewById(R.id.player_Vrpanoramaview);
         panoWidgetView = findViewById(R.id.player_Vrpanoramaview);
 
         loadPanoImage();
@@ -118,12 +113,6 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        Scalar LINE_COLOR_W = new Scalar(255,255,255);
-        Scalar LINE_COLOR_b = new Scalar(0,0,0);
-        Scalar LINE_COLOR_R = new Scalar(255,0,0);
-        Scalar LINE_COLOR_G = new Scalar(0,255,0);
-        Scalar LINE_COLOR_B = new Scalar(0,0,255);
-
         // Get a new frame
         frame = inputFrame.rgba();
 
@@ -143,7 +132,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
         }
 
         if (maxArea.size() > 0) {
-            // 先端描画
+            // ポインタに使う先端取得
             List<Point> point_list_tips = maxArea.get(0).toList();
             int index_maxdistancefinger = 0;
             for (int i = 0; i < point_list_tips.size(); i++) {
