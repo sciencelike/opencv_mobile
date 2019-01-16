@@ -21,8 +21,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -30,9 +28,11 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.vr.sdk.widgets.video.VrVideoEventListener;
 import com.google.vr.sdk.widgets.video.VrVideoView;
 import com.google.vr.sdk.widgets.video.VrVideoView.Options;
+
 import java.io.IOException;
 
 /**
@@ -137,15 +137,15 @@ public class SimpleVrVideoActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_videoplayer);
 
-    seekBar = (SeekBar) findViewById(R.id.seek_bar);
+    seekBar = findViewById(R.id.seek_bar);
     seekBar.setOnSeekBarChangeListener(new SeekBarListener());
-    statusText = (TextView) findViewById(R.id.status_text);
+    statusText = findViewById(R.id.status_text);
 
     // Bind input and output objects for the view.
-    videoWidgetView = (VrVideoView) findViewById(R.id.video_view);
+    videoWidgetView = findViewById(R.id.video_view);
     videoWidgetView.setEventListener(new ActivityEventListener());
 
-    volumeToggle = (ImageButton) findViewById(R.id.volume_toggle);
+    volumeToggle = findViewById(R.id.volume_toggle);
     volumeToggle.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
