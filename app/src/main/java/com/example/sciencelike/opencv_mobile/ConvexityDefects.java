@@ -67,6 +67,7 @@ public class ConvexityDefects {
                 }
             }
             points = point;
+            data = null; // gcのためのマーキング?
         }
         catch (ArrayIndexOutOfBoundsException e) {
             // Log.i("ConvexityDefects", e.toString());

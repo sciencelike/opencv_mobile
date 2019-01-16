@@ -1,6 +1,7 @@
 package com.example.sciencelike.opencv_mobile;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.os.SystemClock;
@@ -167,7 +168,6 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                 lastmotionedtime = SystemClock.uptimeMillis();
                 check = 0;
 
-                /*
                 int[] location = new int[2];
                 Button button_r = findViewById(R.id.Button_r);
                 Button button_g = findViewById(R.id.Button_g);
@@ -175,19 +175,18 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                 button_r.getLocationInWindow(location);
                 if(x >= location[0] && x <= (location[0]+button_r.getWidth()) && y >= location[1] && y <= (location[1]+button_r.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_r");
-                    // button_click(findViewById(R.id.Button_r));
+                    button_click(findViewById(R.id.Button_r));
                 }
                 button_g.getLocationInWindow(location);
                 if(x >= location[0] && x <= (location[0]+button_g.getWidth()) && y >= location[1] && y <= (location[1]+button_g.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_g");
-                    // button_click(findViewById(R.id.Button_g));
+                    button_click(findViewById(R.id.Button_g));
                 }
                 button_b.getLocationInWindow(location);
                 if(x >= location[0] && x <= (location[0]+button_b.getWidth()) && y >= location[1] && y <= (location[1]+button_b.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_b");
-                    // button_click(findViewById(R.id.Button_b));
+                    button_click(findViewById(R.id.Button_b));
                 }
-                */
             }
             if(ConvexityDefects.getPointsNumber() >= 2) {
                 check = 0;
@@ -198,6 +197,51 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     }
 
     public void onCameraViewStopped() {}
+
+    // 暫定的ボタン対応
+    public void button_click (View view) {
+        final String s_on = getResources().getString(R.string.button_txt_on);
+        final String s_off = getResources().getString(R.string.button_txt_off);
+
+        switch (view.getId()) {
+            case R.id.Button_r:
+                final Button button_r = findViewById(R.id.Button_r);
+                if (button_r.getText().equals(s_off))
+                    ((Button) findViewById(R.id.Button_r)).setText(s_on);
+                else ((Button) findViewById(R.id.Button_r)).setText(s_off);
+
+                finish();
+
+                Log.d("MainActivity Button", "Touched Button0");
+
+                break;
+            case R.id.Button_g:
+                final Button button_g = findViewById(R.id.Button_g);
+                if (button_g.getText().equals(s_off))
+                    ((Button) findViewById(R.id.Button_g)).setText(s_on);
+                else ((Button) findViewById(R.id.Button_g)).setText(s_off);
+
+                Log.d("MainActivity Button", "Touched Button1");
+                /*
+                Intent intent1 = new Intent(this, SimpleVrVideoActivity.class);
+                startActivity(intent1);
+                */
+
+                break;
+            case R.id.Button_b:
+                final Button button_b = findViewById(R.id.Button_b);
+                if (button_b.getText().equals(s_off))
+                    ((Button) findViewById(R.id.Button_b)).setText(s_on);
+                else ((Button) findViewById(R.id.Button_b)).setText(s_off);
+
+                Log.d("MainActivity Button", "Touched Button2");
+
+                // Intent intent2 = new Intent(this, PlayerActivity.class);
+                // startActivity(intent2);
+
+                break;
+        }
+    }
 
     static public float[] getCursorPoint() {
         float point[] = {x,y};

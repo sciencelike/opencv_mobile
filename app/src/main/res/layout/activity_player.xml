@@ -10,15 +10,60 @@
         android:layout_height="match_parent"
         android:visibility="invisible"
         opencv:show_fps="true">
-        
     </org.opencv.android.JavaCameraView>
 
-    <com.google.vr.sdk.widgets.pano.VrPanoramaView
-        android:id="@+id/player_Vrpanoramaview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
+        android:layout_height="match_parent">
 
-    </com.google.vr.sdk.widgets.pano.VrPanoramaView>
+        <com.google.vr.sdk.widgets.pano.VrPanoramaView
+            android:id="@+id/player_Vrpanoramaview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+        </com.google.vr.sdk.widgets.pano.VrPanoramaView>
 
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="top">
+
+            <Button
+                android:id="@+id/Button_r"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#96ff0000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_g"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#9600ff00"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_b"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#960000ff"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+        </LinearLayout>
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>
