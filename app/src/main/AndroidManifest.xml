@@ -5,6 +5,9 @@
     <!-- Allow to use a camera -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- Allow to use a storage for save data -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />

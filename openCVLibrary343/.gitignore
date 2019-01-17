@@ -1,15 +1,28 @@
-# Android Studio configuration.
 *.iml
-.idea/
-
-# Gradle build.
-.externalNativeBuild/
-.gradle/
-build/
-libraries/jni
-
-# User configuration.
-local.properties
-
-# OS configurations.
+.gradle
+/local.properties
+/.idea/caches
+/.idea/workspace.xml
+/.idea/libraries
 .DS_Store
+/build
+/captures
+
+*.apk
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+local.properties
+.classpath
+.project
+proguard/
+*.ipr
+*.iws
+app/build/
+
+.idea/*.xml
+
+!.idea/gradle.xml
+!.idea/runConfigurations/*.xml

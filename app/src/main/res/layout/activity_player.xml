@@ -26,41 +26,127 @@
         <LinearLayout
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="100dp"
             android:layout_gravity="top">
 
             <Button
-                android:id="@+id/Button_r"
+                android:id="@+id/Button_1"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="20dp"
                 android:layout_weight="1"
-                android:background="#96ff0000"
+                android:background="#96000000"
                 android:onClick="button_click"
                 android:text="@string/button_txt_off">
             </Button>
 
             <Button
-                android:id="@+id/Button_g"
+                android:id="@+id/Button_2"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="20dp"
                 android:layout_weight="1"
-                android:background="#9600ff00"
+                android:background="#96000000"
                 android:onClick="button_click"
                 android:text="@string/button_txt_off">
             </Button>
 
             <Button
-                android:id="@+id/Button_b"
+                android:id="@+id/Button_3"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="20dp"
                 android:layout_weight="1"
-                android:background="#960000ff"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center">
+
+            <Button
+                android:id="@+id/Button_4"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_5"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_6"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom">
+
+            <Button
+                android:id="@+id/Button_7"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_8"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_9"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
                 android:onClick="button_click"
                 android:text="@string/button_txt_off">
             </Button>

@@ -3,6 +3,7 @@ package com.example.sciencelike.opencv_mobile;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,9 +23,16 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.imgproc.Imgproc;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +50,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     static int check = 0;
     static long lastmotionedtime = 0;
     static float x = 0, y = 0;
+    static ArrayList<Button> button_list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +74,13 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.CAMERA
             }, 1);
+        }
+
+        // ボタンをリスト追加
+        for(int i=1; i<=9; i++){
+            int viewId = getResources().getIdentifier("Button_" + i, "id", getPackageName());
+            Button temp = findViewById(viewId);
+            button_list.add(temp);
         }
 
         // ポインタ描画
@@ -118,17 +134,19 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
         // 手の最大面積の領域取得 (輪郭ではない)
         MatOfPoint contours = SkinDetector.getMaxSkinArea(frame);
-
         List<MatOfPoint> maxArea = new ArrayList<>();
-
         Point point_moment = new Point();
+        MatOfInt hull = new MatOfInt();
 
         if (contours != null) {
             // 手の最大面積の輪郭を取得
             maxArea = OutlineDetector.getLineData(contours);
-
             // 最大面積の輪郭から重心計算
             point_moment = CalcPoint.calcMoment(contours);
+            // 凹点描画のためのhullを取得
+            Imgproc.convexHull(contours, hull);
+            // 凹点集合計算
+            ConvexityDefects.convexityDefects(frame, contours, hull, false);
         }
 
         if (maxArea.size() > 0) {
@@ -146,35 +164,27 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             x = (float)point_list_tips.get(index_maxdistancefinger).x * mOpenCvCameraView.mScale;
             y = (float)point_list_tips.get(index_maxdistancefinger).y * mOpenCvCameraView.mScale;
 
-            // Log.i("PlayerActivity Touchtest", "Cursor Point" + x + " " + y);
-
             // クリック判定とボタン動作
+            // クリックトリガー
             if(ConvexityDefects.getPointsNumber() == 0) {
                 check = 1;
             }
-            if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+1000) {
+            // クリック動作
+            if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+500) {
                 Log.i("MainActivity Touchtest","Single Touch " + x + " " + y);
+
                 lastmotionedtime = SystemClock.uptimeMillis();
                 check = 0;
 
                 int[] location = new int[2];
-                Button button_r = findViewById(R.id.Button_r);
-                Button button_g = findViewById(R.id.Button_g);
-                Button button_b = findViewById(R.id.Button_b);
-                button_r.getLocationInWindow(location);
-                if(x >= location[0] && x <= (location[0]+button_r.getWidth()) && y >= location[1] && y <= (location[1]+button_r.getHeight())) {
-                    Log.i("MainActivity Touchtest", "Touched button_r");
-                    button_click(findViewById(R.id.Button_r));
-                }
-                button_g.getLocationInWindow(location);
-                if(x >= location[0] && x <= (location[0]+button_g.getWidth()) && y >= location[1] && y <= (location[1]+button_g.getHeight())) {
-                    Log.i("MainActivity Touchtest", "Touched button_g");
-                    button_click(findViewById(R.id.Button_g));
-                }
-                button_b.getLocationInWindow(location);
-                if(x >= location[0] && x <= (location[0]+button_b.getWidth()) && y >= location[1] && y <= (location[1]+button_b.getHeight())) {
-                    Log.i("MainActivity Touchtest", "Touched button_b");
-                    button_click(findViewById(R.id.Button_b));
+
+                // ボタンの当たり判定処理
+                for(int i=1; i<=9; i++){
+                    button_list.get(i-1).getLocationInWindow(location);
+                    if(x >= location[0] && x <= (location[0]+button_list.get(i-1).getWidth()) && y >= location[1] && y <= (location[1]+button_list.get(i-1).getHeight())) {
+                        Log.i("MainActivity Touchtest", "Touched button_" + i);
+                        button_click(button_list.get(i-1));
+                    }
                 }
             }
             if(ConvexityDefects.getPointsNumber() >= 2) {
@@ -182,52 +192,78 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             }
         }
 
+        writeData();
+
         return frame;
     }
 
     public void onCameraViewStopped() {}
 
+    // ファイル書き込み用
+    private String filePath = Environment.getExternalStorageDirectory().getPath() + "/soturon/test.csv";
+
+    public void writeData() {
+        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
+            String str = String.valueOf(SystemClock.uptimeMillis()) + ", " + x + ", " + y + "\n";
+            File file = new File(filePath);
+
+            try(FileOutputStream fileOutputStream =
+                    new FileOutputStream(file, true);
+                OutputStreamWriter outputStreamWriter =
+                    new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+                BufferedWriter bw =
+                    new BufferedWriter(outputStreamWriter)
+            ) {
+                bw.write(str);
+                bw.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     // 暫定的ボタン対応
     public void button_click (View view) {
-        final String s_on = getResources().getString(R.string.button_txt_on);
-        final String s_off = getResources().getString(R.string.button_txt_off);
+        // final String s_on = getResources().getString(R.string.button_txt_on);
+        // final String s_off = getResources().getString(R.string.button_txt_off);
 
         switch (view.getId()) {
-            case R.id.Button_r:
-                final Button button_r = findViewById(R.id.Button_r);
-                if (button_r.getText().equals(s_off))
-                    ((Button) findViewById(R.id.Button_r)).setText(s_on);
-                else ((Button) findViewById(R.id.Button_r)).setText(s_off);
-
+            case R.id.Button_1:
+                // finish();
+                Log.d("PlayerActivity Button", "Touched Button1");
                 finish();
-
-                Log.d("MainActivity Button", "Touched Button0");
-
                 break;
-            case R.id.Button_g:
-                final Button button_g = findViewById(R.id.Button_g);
-                if (button_g.getText().equals(s_off))
-                    ((Button) findViewById(R.id.Button_g)).setText(s_on);
-                else ((Button) findViewById(R.id.Button_g)).setText(s_off);
 
-                Log.d("MainActivity Button", "Touched Button1");
-                /*
-                Intent intent1 = new Intent(this, SimpleVrVideoActivity.class);
-                startActivity(intent1);
-                */
-
+            case R.id.Button_2:
+                Log.d("PlayerActivity Button", "Touched Button2");
                 break;
-            case R.id.Button_b:
-                final Button button_b = findViewById(R.id.Button_b);
-                if (button_b.getText().equals(s_off))
-                    ((Button) findViewById(R.id.Button_b)).setText(s_on);
-                else ((Button) findViewById(R.id.Button_b)).setText(s_off);
 
-                Log.d("MainActivity Button", "Touched Button2");
+            case R.id.Button_3:
+                Log.d("PlayerActivity Button", "Touched Button3");
+                break;
 
-                // Intent intent2 = new Intent(this, PlayerActivity.class);
-                // startActivity(intent2);
+            case R.id.Button_4:
+                Log.d("PlayerActivity Button", "Touched Button4");
+                break;
 
+            case R.id.Button_5:
+                Log.d("PlayerActivity Button", "Touched Button5");
+                break;
+
+            case R.id.Button_6:
+                Log.d("PlayerActivity Button", "Touched Button6");
+                break;
+
+            case R.id.Button_7:
+                Log.d("PlayerActivity Button", "Touched Button7");
+                break;
+
+            case R.id.Button_8:
+                Log.d("PlayerActivity Button", "Touched Button8");
+                break;
+
+            case R.id.Button_9:
+                Log.d("PlayerActivity Button", "Touched Button9");
                 break;
         }
     }

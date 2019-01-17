@@ -69,13 +69,22 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // カメラの権限確認
         Log.d("onCreate","Permisson Check");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("onCreate","Permisson Granted");
+            Log.d("onCreate","Permisson Granted: CAMERA");
             // Set up camera listener.
             launchCamera();
         } else {
-            Log.d("onCreate","Permisson Not Found");
+            Log.d("onCreate","Permisson Not Found: CAMERA");
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.CAMERA
+            }, 1);
+        }
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.d("onCreate","Permisson Granted: WRITE_EXTERNAL_STORAGE");
+        }  else {
+            Log.d("onCreate","Permisson Not Found: WRITE_EXTERNAL_STORAGE");
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 1);
         }
 
@@ -109,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     public void button_click (View view) {
         final String s_on = getResources().getString(R.string.button_txt_on);
         final String s_off = getResources().getString(R.string.button_txt_off);
+        Intent intent = new Intent(this, PlayerActivity.class);
 
         switch (view.getId()) {
             case R.id.Button_r:
@@ -127,10 +137,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 else ((Button) findViewById(R.id.Button_g)).setText(s_off);
 
                 Log.d("MainActivity Button", "Touched Button1");
-                /*
-                Intent intent1 = new Intent(this, SimpleVrVideoActivity.class);
-                startActivity(intent1);
-                */
+
+                intent.putExtra("button_id", "Button_1");
+                startActivity(intent);
 
                 break;
             case R.id.Button_b:
@@ -141,9 +150,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
                 Log.d("MainActivity Button", "Touched Button2");
 
-                Intent intent2 = new Intent(this, PlayerActivity.class);
-                startActivity(intent2);
-
+                intent.putExtra("button_id", "Button_2");
+                startActivity(intent);
 
                 break;
         }
@@ -212,7 +220,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
 
             // 凹点集合描画
-            ConvexityDefects.convexityDefects(frame, contours, hull, LINE_COLOR_B);
+            ConvexityDefects.setColor(LINE_COLOR_B);
+            ConvexityDefects.convexityDefects(frame, contours, hull, true);
 
             // 重心描画
             Imgproc.line(frame, point_moment, point_moment, LINE_COLOR_W, 5);
