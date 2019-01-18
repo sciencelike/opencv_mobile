@@ -10,15 +10,11 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutlineDetector {
-    private static OutlineDetector sInstance;
+class OutlineDetector {
+    static MatOfInt hull = new MatOfInt();
 
-    public static OutlineDetector getInstance() {
-        if (sInstance != null) {
-            return null;
-        }
-        sInstance = new OutlineDetector();
-        return sInstance;
+    static MatOfInt getHullData() {
+        return hull;
     }
 
     static List<MatOfPoint> getLineData(MatOfPoint contours) {
@@ -28,7 +24,6 @@ public class OutlineDetector {
 
         // 輪郭取得
         List<MatOfPoint> hullList = new ArrayList<>();
-        MatOfInt hull = new MatOfInt();
         Imgproc.convexHull(contours, hull);
 
         Point[] contourArray = contours.toArray();
@@ -81,6 +76,7 @@ public class OutlineDetector {
         if (hullList.size() == 0) {
             return null;
         }else{
+            LogWriter.writeData("OutlineDetector_getLineData", hullList);
             return hullList;
         }
     }

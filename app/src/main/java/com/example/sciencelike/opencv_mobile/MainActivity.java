@@ -24,7 +24,6 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -182,16 +181,12 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         MatOfPoint contours = SkinDetector.getMaxSkinArea(frame);
 
         List<MatOfPoint> maxArea = new ArrayList<>();
-        MatOfInt hull = new MatOfInt();
 
         Point point_moment = new Point();
 
         if (contours != null) {
             // 手の最大面積の輪郭を取得
             maxArea = OutlineDetector.getLineData(contours);
-
-            // 凹点描画のためのhullを取得
-            Imgproc.convexHull(contours, hull);
 
             // 最大面積の輪郭から重心計算
             point_moment = CalcPoint.calcMoment(contours);
@@ -221,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
             // 凹点集合描画
             ConvexityDefects.setColor(LINE_COLOR_B);
-            ConvexityDefects.convexityDefects(frame, contours, hull, true);
+            ConvexityDefects.convexityDefects(frame, contours, OutlineDetector.getHullData(), true);
 
             // 重心描画
             Imgproc.line(frame, point_moment, point_moment, LINE_COLOR_W, 5);
@@ -243,14 +238,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 Log.i("MainActivity Touchtest","Single Touch " + x + " " + y);
                 lastmotionedtime = SystemClock.uptimeMillis();
                 check = 0;
-
-                /*
-                MotionEvent ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+50, MotionEvent.ACTION_DOWN, x, y, 0);
-                this.onTouchEvent(ev);
-                ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+50, MotionEvent.ACTION_UP, x, y, 0);
-                this.onTouchEvent(ev);
-                ev.recycle();
-                */
 
                 int[] location = new int[2];
                 Button button_r = findViewById(R.id.Button_r);

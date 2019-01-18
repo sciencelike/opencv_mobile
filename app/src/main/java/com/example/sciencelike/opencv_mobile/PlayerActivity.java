@@ -3,7 +3,8 @@ package com.example.sciencelike.opencv_mobile;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,11 +29,6 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +38,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     private ImageLoaderTask backgroundImageLoaderTask;
 
     // opencv
-    private static final String TAG_OPENCV = "OpenCV/HandRecognition";
+    private static final String TAG = "PlayerActivity";
     private CameraBridgeViewBase mOpenCvCameraView;
     public Mat frame;
 
@@ -125,7 +121,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     }
 
     public void onCameraViewStarted(int width, int height) {
-        Log.i(TAG_OPENCV, "Camera view start");
+        Log.i("OPENCV", "Camera view start");
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
@@ -171,7 +167,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             }
             // クリック動作
             if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+500) {
-                Log.i("MainActivity Touchtest","Single Touch " + x + " " + y);
+                Log.i("PlayerActivity Touchtest","Single Touch " + x + " " + y);
 
                 lastmotionedtime = SystemClock.uptimeMillis();
                 check = 0;
@@ -182,7 +178,8 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                 for(int i=1; i<=9; i++){
                     button_list.get(i-1).getLocationInWindow(location);
                     if(x >= location[0] && x <= (location[0]+button_list.get(i-1).getWidth()) && y >= location[1] && y <= (location[1]+button_list.get(i-1).getHeight())) {
-                        Log.i("MainActivity Touchtest", "Touched button_" + i);
+                        Log.i("PlayerActivity Touchtest", "Touched button_" + i);
+                        LogWriter.writeData("PlayerActivity_onCameraFrame_Touched button", i);
                         button_click(button_list.get(i-1));
                     }
                 }
@@ -192,50 +189,39 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             }
         }
 
-        writeData();
+        LogWriter.writeData("PlayerActivity_onCameraFrame_Pointer", x, y);
 
         return frame;
     }
 
     public void onCameraViewStopped() {}
 
-    // ファイル書き込み用
-    private String filePath = Environment.getExternalStorageDirectory().getPath() + "/soturon/test.csv";
-
-    public void writeData() {
-        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
-            String str = String.valueOf(SystemClock.uptimeMillis()) + ", " + x + ", " + y + "\n";
-            File file = new File(filePath);
-
-            try(FileOutputStream fileOutputStream =
-                    new FileOutputStream(file, true);
-                OutputStreamWriter outputStreamWriter =
-                    new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
-                BufferedWriter bw =
-                    new BufferedWriter(outputStreamWriter)
-            ) {
-                bw.write(str);
-                bw.flush();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     // 暫定的ボタン対応
     public void button_click (View view) {
-        // final String s_on = getResources().getString(R.string.button_txt_on);
-        // final String s_off = getResources().getString(R.string.button_txt_off);
+        final Handler mainHandler = new Handler(Looper.getMainLooper());
 
         switch (view.getId()) {
             case R.id.Button_1:
-                // finish();
                 Log.d("PlayerActivity Button", "Touched Button1");
+
                 finish();
+
                 break;
 
             case R.id.Button_2:
                 Log.d("PlayerActivity Button", "Touched Button2");
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(findViewById(R.id.Button_3).getVisibility() == View.VISIBLE) {
+                            findViewById(R.id.Button_3).setVisibility(View.INVISIBLE);
+                        } else {
+                            findViewById(R.id.Button_3).setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
                 break;
 
             case R.id.Button_3:
@@ -301,7 +287,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
-                    Log.i(TAG_OPENCV, "OpenCV loaded successfully");
+                    Log.i("OPENCV", "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
                     break;
                 }

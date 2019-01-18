@@ -36,6 +36,7 @@ public class SkinDetector {
         sUpperrb = new Scalar(h_u, s_u, v_u);
 
         Log.i("SkinDetector", "set hsv range: " + h_l + " " + s_l + " " + v_l + " → " + h_u + " " + s_u + " " + v_u);
+        LogWriter.writeData("SkinDetector_setSkinColorRange", h_l, s_l, v_l, h_u, s_u, v_u);
     }
 
     public static byte[] setSkinColorRange(Mat frame) {
