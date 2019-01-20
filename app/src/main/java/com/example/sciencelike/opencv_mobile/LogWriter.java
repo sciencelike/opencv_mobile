@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 class LogWriter {
-    static private String filePath = Environment.getExternalStorageDirectory().getPath() + "/soturon/test.csv";
+    static private String filePath = Environment.getExternalStorageDirectory().getPath() + "/test.csv";
 
     static private boolean checkStorageState(){
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
@@ -51,15 +51,32 @@ class LogWriter {
         saveData(str);
     }
 
+    // MainActivity + PlayerActivity onCameraFrame Touched button
+    static void writeData(String tag, String buttonId) {
+        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + buttonId + "\n";
+        saveData(str);
+    }
+
     // PlayerActivity onCameraFrame Touched button
-    static void writeData(String tag, int buttonNumber) {
-        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + buttonNumber + "\n";
+    static void writeData(String tag, int buttonOrder) {
+        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + buttonOrder + "\n";
         saveData(str);
     }
 
     // PlayerActivity onCameraFrame Pointer
     static void writeData(String tag, float x, float y) {
         String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + x + "," + y + "\n";
+        saveData(str);
+    }
+
+    static void writeData(String tag, int x, int y) {
+        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + x + "," + y + "\n";
+        saveData(str);
+    }
+
+    // PlayerActivity activity change
+    static void writeData(String string) {
+        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + "etc" + "," + string + "\n";
         saveData(str);
     }
 }

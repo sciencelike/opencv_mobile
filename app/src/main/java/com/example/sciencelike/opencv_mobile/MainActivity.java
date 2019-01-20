@@ -89,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         // 画面消灯を無効化する
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        LogWriter.writeData("MainActivity_onCreate_camerasizeHW", mOpenCvCameraView.mFrameHeight, mOpenCvCameraView.mFrameWidth);
     }
 
     @Override
@@ -246,17 +248,22 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 button_r.getLocationInWindow(location);
                 if(x >= location[0] && x <= (location[0]+button_r.getWidth()) && y >= location[1] && y <= (location[1]+button_r.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_r");
-                    button_click(findViewById(R.id.Button_r));
+                    findViewById(R.id.Button_r).setBackgroundColor(0x96ffffff);
+                    LogWriter.writeData("MainActivity_onCameraFrame_Touched button", "Button_r");
                 }
                 button_g.getLocationInWindow(location);
                 if(x >= location[0] && x <= (location[0]+button_g.getWidth()) && y >= location[1] && y <= (location[1]+button_g.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_g");
-                    button_click(findViewById(R.id.Button_g));
+                    findViewById(R.id.Button_g).setBackgroundColor(0x96ffffff);
+                    LogWriter.writeData("MainActivity_onCameraFrame_Touched button", "Button_g");
+                    // button_click(findViewById(R.id.Button_g));
                 }
                 button_b.getLocationInWindow(location);
                 if(x >= location[0] && x <= (location[0]+button_b.getWidth()) && y >= location[1] && y <= (location[1]+button_b.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_b");
-                    button_click(findViewById(R.id.Button_b));
+                    LogWriter.writeData("MainActivity_onCameraFrame_Touched button", "Button_b");
+                    findViewById(R.id.Button_b).setBackgroundColor(0x96ffffff);
+                    // button_click(findViewById(R.id.Button_b));
                 }
             }
             if(ConvexityDefects.getPointsNumber() >= 2) {

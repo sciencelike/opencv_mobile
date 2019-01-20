@@ -30,6 +30,7 @@ import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PlayerActivity extends AppCompatActivity implements CvCameraViewListener2 {
@@ -38,7 +39,6 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     private ImageLoaderTask backgroundImageLoaderTask;
 
     // opencv
-    private static final String TAG = "PlayerActivity";
     private CameraBridgeViewBase mOpenCvCameraView;
     public Mat frame;
 
@@ -47,6 +47,13 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     static long lastmotionedtime = 0;
     static float x = 0, y = 0;
     static ArrayList<Button> button_list = new ArrayList<>();
+
+    // ボタンテスト
+    static int buttonState = 0;
+    static List<Integer> targetList = new ArrayList<>();
+    static int firstButtonId = 0;
+    static int secondButtonId = 0;
+    static int amountButton = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,19 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
         // 画面消灯を無効化する
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // ボタンを初期化
+        initButtonState();
+
+        // ボタン押す順番決定
+        for(int i=1; i<=amountButton; i++) {
+            for(int j=1; j<=amountButton; j++) {
+                if(i!=j) targetList.add(i*10+j);
+            }
+        }
+        Collections.shuffle(targetList);
+
+        LogWriter.writeData("Start PlayerActivity");
     }
 
     @Override
@@ -166,7 +186,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                 check = 1;
             }
             // クリック動作
-            if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+500) {
+            if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+200) {
                 Log.i("PlayerActivity Touchtest","Single Touch " + x + " " + y);
 
                 lastmotionedtime = SystemClock.uptimeMillis();
@@ -175,11 +195,11 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                 int[] location = new int[2];
 
                 // ボタンの当たり判定処理
-                for(int i=1; i<=9; i++){
+                for(int i=1; i<=amountButton; i++){
                     button_list.get(i-1).getLocationInWindow(location);
                     if(x >= location[0] && x <= (location[0]+button_list.get(i-1).getWidth()) && y >= location[1] && y <= (location[1]+button_list.get(i-1).getHeight())) {
                         Log.i("PlayerActivity Touchtest", "Touched button_" + i);
-                        LogWriter.writeData("PlayerActivity_onCameraFrame_Touched button", i);
+                        LogWriter.writeData("PlayerActivity_onCameraFrame_Touched button", Integer.toString(i));
                         button_click(button_list.get(i-1));
                     }
                 }
@@ -189,6 +209,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             }
         }
 
+        LogWriter.writeData("PlayerActivity_onCameraFrame_ConvexityDefectsAmount", ConvexityDefects.getPointsNumber());
         LogWriter.writeData("PlayerActivity_onCameraFrame_Pointer", x, y);
 
         return frame;
@@ -196,62 +217,143 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
     public void onCameraViewStopped() {}
 
+    public void initButtonState() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i=1; i<=9; i++) {
+                    int viewId = getResources().getIdentifier("Button_" + i, "id", getPackageName());
+                    findViewById(viewId).setVisibility(View.INVISIBLE);
+                }
+                if(buttonState==0) {
+                    findViewById(R.id.Button_5).setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    public void changeButtonState(final int number) {
+        initButtonState();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int order_1 = number/10;
+                int order_2 = number-(number/10)*10;
+
+                int viewId_1 = getResources().getIdentifier("Button_" + Integer.toString(order_1), "id", getPackageName());
+                int viewId_2 = getResources().getIdentifier("Button_" + Integer.toString(order_2), "id", getPackageName());
+
+                firstButtonId = viewId_1;
+                secondButtonId = viewId_2;
+
+                findViewById(viewId_1).setVisibility(View.VISIBLE);
+                ((Button) findViewById(viewId_1)).setText("1");
+                findViewById(viewId_2).setVisibility(View.VISIBLE);
+                ((Button) findViewById(viewId_2)).setText("2");
+
+            }
+        });
+
+        buttonState=2;
+    }
+
+    public void invisibleButton() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                buttonState = 3;
+                findViewById(firstButtonId).setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
     // 暫定的ボタン対応
     public void button_click (View view) {
         final Handler mainHandler = new Handler(Looper.getMainLooper());
 
+        Log.d("PlayerActivity Button", Integer.toString(buttonState));
+
         switch (view.getId()) {
             case R.id.Button_1:
                 Log.d("PlayerActivity Button", "Touched Button1");
-
-                finish();
+                if(buttonState==2 && firstButtonId==R.id.Button_1) invisibleButton();
+                if(buttonState==3 && secondButtonId==R.id.Button_1) buttonState = 1;
 
                 break;
 
             case R.id.Button_2:
                 Log.d("PlayerActivity Button", "Touched Button2");
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(findViewById(R.id.Button_3).getVisibility() == View.VISIBLE) {
-                            findViewById(R.id.Button_3).setVisibility(View.INVISIBLE);
-                        } else {
-                            findViewById(R.id.Button_3).setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
+                if(buttonState==2 && firstButtonId==R.id.Button_2) invisibleButton();
+                if(buttonState==3 && secondButtonId==R.id.Button_2) buttonState = 1;
 
                 break;
 
             case R.id.Button_3:
                 Log.d("PlayerActivity Button", "Touched Button3");
+                if(buttonState==2 && firstButtonId==R.id.Button_3) invisibleButton();
+                if(buttonState==3 && secondButtonId==R.id.Button_3) buttonState = 1;
+
                 break;
 
             case R.id.Button_4:
                 Log.d("PlayerActivity Button", "Touched Button4");
+                if(buttonState==2 && firstButtonId==R.id.Button_4) invisibleButton();
+                if(buttonState==3 && secondButtonId==R.id.Button_4) buttonState = 1;
                 break;
 
             case R.id.Button_5:
                 Log.d("PlayerActivity Button", "Touched Button5");
+                if(buttonState==0) {
+                    buttonState=1;
+                }
+                if(buttonState==2 && firstButtonId==R.id.Button_5) invisibleButton();
+                if(buttonState==3 && secondButtonId==R.id.Button_5) buttonState = 1;
+
                 break;
 
             case R.id.Button_6:
                 Log.d("PlayerActivity Button", "Touched Button6");
+                if(buttonState==2 && firstButtonId==R.id.Button_6) invisibleButton();
+                if(buttonState==3 && secondButtonId==R.id.Button_6) buttonState = 1;
+
                 break;
 
+            /*
             case R.id.Button_7:
                 Log.d("PlayerActivity Button", "Touched Button7");
+                if(buttonState==2 && firstButtonId==R.id.Button_7) invisibleButton();
+                if(buttonState==3 && secondButtonId==R.id.Button_7) buttonState = 1;
+
                 break;
 
             case R.id.Button_8:
                 Log.d("PlayerActivity Button", "Touched Button8");
+                if(buttonState==2 && firstButtonId==R.id.Button_8) invisibleButton();
+                if(buttonState==3 && secondButtonId==R.id.Button_8) buttonState = 1;
+
                 break;
 
             case R.id.Button_9:
                 Log.d("PlayerActivity Button", "Touched Button9");
+                if(buttonState==2 && firstButtonId==R.id.Button_9) invisibleButton();
+                if(buttonState==3 && secondButtonId==R.id.Button_9) buttonState = 1;
+
                 break;
+            */
         }
+
+        if(targetList.size()!=0) {
+            if(buttonState==1) {
+                int number = targetList.get(0);
+                targetList.remove(0);
+                changeButtonState(number);
+                LogWriter.writeData("PlayerActivity_buttonclick_buttonorder", number);
+            }
+        } else {
+            finish();
+        }
+
     }
 
     static public float[] getCursorPoint() {
