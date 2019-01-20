@@ -350,7 +350,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                 changeButtonState(number);
                 LogWriter.writeData("PlayerActivity_buttonclick_buttonorder", number);
             }
-        } else {
+        } else if(buttonState==1) {
             finish();
         }
 
