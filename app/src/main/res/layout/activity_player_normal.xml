@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_Mainview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:opencv="http://schemas.android.com/apk/res-auto">
+
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/player_CameraView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        opencv:show_fps="true">
+    </org.opencv.android.JavaCameraView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.vr.sdk.widgets.pano.VrPanoramaView
+            android:id="@+id/player_Vrpanoramaview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+        </com.google.vr.sdk.widgets.pano.VrPanoramaView>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="top">
+
+            <Button
+                android:id="@+id/Button_1"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_2"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_3"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center">
+
+            <Button
+                android:id="@+id/Button_4"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_5"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_6"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom">
+
+            <Button
+                android:id="@+id/Button_7"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_8"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+
+            <Button
+                android:id="@+id/Button_9"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:background="#96000000"
+                android:onClick="button_click"
+                android:text="@string/button_txt_off">
+            </Button>
+        </LinearLayout>
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>

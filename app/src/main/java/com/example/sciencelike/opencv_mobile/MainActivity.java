@@ -89,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         // 画面消灯を無効化する
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        LogWriter.writeData("MainActivity_onCreate_camerasizeHW", mOpenCvCameraView.mFrameHeight, mOpenCvCameraView.mFrameWidth);
     }
 
     @Override
@@ -109,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // ここでカメラの最大解像度を設定する
         mOpenCvCameraView.setMaxFrameSize(960, 540);
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+        LogWriter.writeData("MainActivity_onCreate_camerasizeHW", mOpenCvCameraView.mFrameHeight, mOpenCvCameraView.mFrameWidth);
     }
 
     public void onCameraViewStarted(int width, int height) {
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
                 Log.d("MainActivity Button", "Touched Button1");
 
-                intent.putExtra("button_id", "Button_1");
+                intent.putExtra("button_id", "1");
                 startActivity(intent);
 
                 break;
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
                 Log.d("MainActivity Button", "Touched Button2");
 
-                intent.putExtra("button_id", "Button_2");
+                intent.putExtra("button_id", "2");
                 startActivity(intent);
 
                 break;

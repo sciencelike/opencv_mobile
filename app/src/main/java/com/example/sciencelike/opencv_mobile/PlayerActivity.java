@@ -1,10 +1,9 @@
 package com.example.sciencelike.opencv_mobile;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -57,9 +56,16 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // ボタンサイズ変更
+        Intent intent = getIntent();
+
         // vr
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_player);
+        if("2".equals(intent.getStringExtra("button_id"))) {
+            setContentView(R.layout.activity_player_normal);
+        } else if("1".equals(intent.getStringExtra("button_id"))) {
+            setContentView(R.layout.activity_player_small);
+        }
 
         panoWidgetView = findViewById(R.id.player_Vrpanoramaview);
 
@@ -270,8 +276,6 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
     // 暫定的ボタン対応
     public void button_click (View view) {
-        final Handler mainHandler = new Handler(Looper.getMainLooper());
-
         Log.d("PlayerActivity Button", Integer.toString(buttonState));
 
         switch (view.getId()) {

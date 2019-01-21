@@ -23,133 +23,150 @@
             android:scrollbars="none">
         </com.google.vr.sdk.widgets.pano.VrPanoramaView>
 
-        <LinearLayout
+        <RelativeLayout
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_gravity="top">
+            >
 
             <Button
                 android:id="@+id/Button_1"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:layout_weight="1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:shape="rectangle"
+                android:layout_marginStart="30dp"
+                android:layout_marginVertical="20dp"
                 android:background="#96000000"
                 android:onClick="button_click"
+                android:layout_alignParentStart="true"
                 android:text="@string/button_txt_off">
             </Button>
 
             <Button
                 android:id="@+id/Button_2"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:shape="rectangle"
                 android:layout_margin="20dp"
-                android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
+                android:layout_centerHorizontal="true"
                 android:text="@string/button_txt_off">
             </Button>
 
             <Button
                 android:id="@+id/Button_3"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:layout_weight="1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:shape="rectangle"
+                android:layout_marginEnd="30dp"
+                android:layout_marginVertical="20dp"
                 android:background="#96000000"
                 android:onClick="button_click"
+                android:layout_alignParentEnd="true"
                 android:text="@string/button_txt_off">
             </Button>
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            >
 
             <Button
                 android:id="@+id/Button_4"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:layout_weight="1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:shape="rectangle"
+                android:layout_marginStart="30dp"
+                android:layout_marginVertical="20dp"
                 android:background="#96000000"
                 android:onClick="button_click"
+                android:layout_alignParentStart="true"
                 android:text="@string/button_txt_off">
             </Button>
 
             <Button
                 android:id="@+id/Button_5"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:shape="rectangle"
                 android:layout_margin="20dp"
-                android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
+                android:layout_centerHorizontal="true"
                 android:text="@string/button_txt_off">
             </Button>
 
             <Button
                 android:id="@+id/Button_6"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:layout_weight="1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:shape="rectangle"
+                android:layout_marginEnd="30dp"
+                android:layout_marginVertical="20dp"
                 android:background="#96000000"
                 android:onClick="button_click"
+                android:layout_alignParentEnd="true"
                 android:text="@string/button_txt_off">
             </Button>
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_gravity="bottom">
+            android:layout_gravity="bottom"
+            >
 
             <Button
                 android:id="@+id/Button_7"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:layout_weight="1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:shape="rectangle"
+                android:layout_marginStart="30dp"
+                android:layout_marginVertical="20dp"
                 android:background="#96000000"
                 android:onClick="button_click"
+                android:layout_alignParentStart="true"
                 android:text="@string/button_txt_off">
             </Button>
 
             <Button
                 android:id="@+id/Button_8"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:shape="rectangle"
                 android:layout_margin="20dp"
-                android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
+                android:layout_centerHorizontal="true"
                 android:text="@string/button_txt_off">
             </Button>
 
             <Button
                 android:id="@+id/Button_9"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:layout_weight="1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:shape="rectangle"
+                android:layout_marginEnd="30dp"
+                android:layout_marginVertical="20dp"
                 android:background="#96000000"
                 android:onClick="button_click"
+                android:layout_alignParentEnd="true"
                 android:text="@string/button_txt_off">
             </Button>
-        </LinearLayout>
+        </RelativeLayout>
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>
