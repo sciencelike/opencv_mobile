@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             byte[] data = SkinDetector.setSkinColorRange(frame);
 
             Context context = getApplicationContext();
-            Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
+            Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_LONG);
             t.show();
         }
     };
