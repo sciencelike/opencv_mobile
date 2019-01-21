@@ -179,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // 目印描画
         SkinDetector.setSkinMarker(frame, LINE_COLOR_G);
 
+        if(true) return frame;
+
         // 手の最大面積の領域取得 (輪郭ではない)
         MatOfPoint contours = SkinDetector.getMaxSkinArea(frame);
 
