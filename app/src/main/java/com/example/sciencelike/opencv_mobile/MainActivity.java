@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -285,6 +286,27 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         return frame;
     }
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e) {
+
+        // DOWNとUPが取得できるのでログの2重表示防止のためif
+        if (e.getAction() == KeyEvent.ACTION_DOWN) {
+            //キーコード表示
+            Log.d("KeyCode", "KeyCode:" + e.getKeyCode());
+            if(e.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                byte[] data = SkinDetector.setSkinColorRange(frame);
+
+                Context context = getApplicationContext();
+                Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
+                t.show();
+
+                return true;
+            }
+        }
+
+        return super.dispatchKeyEvent(e);
+    }
+
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
         }
@@ -306,12 +328,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         @Override
         public void onLongPress(MotionEvent event) {
             Log.i("MainActivity Gesture","LongPress ");
-
-            byte[] data = SkinDetector.setSkinColorRange(frame);
-
-            Context context = getApplicationContext();
-            Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
-            t.show();
         }
     };
 
