@@ -32,11 +32,12 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Initialize OpenCV manager.
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+    private final BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
             switch (status) {
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     }
 
     // カメラ起動
-    public void launchCamera() {
+    private void launchCamera() {
         mOpenCvCameraView = findViewById(R.id.CameraView);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         // ここでカメラの最大解像度を設定する
@@ -195,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             point_moment = CalcPoint.calcMoment(contours);
         }
 
-        if (maxArea.size() > 0) {
+        if (Objects.requireNonNull(maxArea).size() > 0) {
             // 生最大面積輪郭描画
             List<MatOfPoint> temp = new ArrayList<>();
             temp.add(contours);
@@ -264,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                     Log.i("MainActivity Touchtest", "Touched button_b");
                     LogWriter.writeData("MainActivity_onCameraFrame_Touched button", "Button_b");
                     findViewById(R.id.Button_b).setBackgroundColor(0x96ffffff);
-                    // button_click(findViewById(R.id.Button_b));
+                    button_click(findViewById(R.id.Button_b));
                 }
             }
             if(ConvexityDefects.getPointsNumber() >= 2) {
@@ -308,8 +309,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-        }
+        event.getAction();
 
         return mGestureDetector.onTouchEvent(event);
     }
@@ -334,11 +334,11 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     public void onCameraViewStopped() {}
 
     // クリック検出用
-    static int check = 0;
-    static long lastmotionedtime = 0;
+    private static int check = 0;
+    private static long lastmotionedtime = 0;
 
     private static final String TAG = "OpenCV/HandRecognition";
     private CameraBridgeViewBase mOpenCvCameraView;
     private GestureDetector mGestureDetector;
-    public Mat frame;
+    private Mat frame;
 }

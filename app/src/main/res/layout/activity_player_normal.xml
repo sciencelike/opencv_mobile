@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        opencv:show_fps="true">
+        opencv:show_fps="false">
     </org.opencv.android.JavaCameraView>
 
     <FrameLayout
@@ -128,17 +128,16 @@
                 android:text="@string/button_txt_off">
             </Button>
 
-            <Button
-                android:id="@+id/Button_8"
-                style="?android:attr/buttonBarButtonStyle"
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="#96000000"
-                android:onClick="button_click"
-                android:text="@string/button_txt_off">
-            </Button>
+                android:background="@color/alignment_marker_color"
+                android:indeterminate="false" />
 
             <Button
                 android:id="@+id/Button_9"

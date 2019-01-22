@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
-public class ImageLoaderTask extends AsyncTask<AssetManager, Void, Bitmap> {
+class ImageLoaderTask extends AsyncTask<AssetManager, Void, Bitmap> {
     private static final String TAG = "ImageLoaderTask";
     private final String assetName;
     private final WeakReference<VrPanoramaView> viewReference;

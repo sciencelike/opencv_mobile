@@ -2,7 +2,6 @@ package com.example.sciencelike.opencv_mobile;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
@@ -14,11 +13,12 @@ public class OverlayPointer extends SurfaceView implements SurfaceHolder.Callbac
     // 参考
     // https://qiita.com/circularuins/items/a61c5e7149f355a54a8b
 
-    private SurfaceHolder holder;
+    private final SurfaceHolder holder;
     private Thread thread;
     private boolean isAttached = true;
 
-    int x=0, y=0;
+    private int x=0;
+    private int y=0;
 
     //コンストラクタ
     public OverlayPointer(Context context) {

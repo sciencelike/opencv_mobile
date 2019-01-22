@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 class LogWriter {
-    static private String filePath = Environment.getExternalStorageDirectory().getPath() + "/test.csv";
+    static private final String filePath = Environment.getExternalStorageDirectory().getPath() + "/test.csv";
 
     static private boolean checkStorageState(){
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
@@ -42,13 +42,13 @@ class LogWriter {
 
     // OutlineDetector getLineData
     static void writeData(String tag, List<MatOfPoint> hullList) {
-        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag;
+        StringBuilder str = new StringBuilder(String.valueOf(SystemClock.uptimeMillis()) + "," + tag);
 
         for(int i=0; i<hullList.get(0).toList().size(); i++){
-            str = str + "," + hullList.get(0).toList().get(i).x + "_" + hullList.get(0).toList().get(i).y;
+            str.append(",").append(hullList.get(0).toList().get(i).x).append("_").append(hullList.get(0).toList().get(i).y);
         }
-        str = str + "\n";
-        saveData(str);
+        str.append("\n");
+        saveData(str.toString());
     }
 
     // MainActivity + PlayerActivity onCameraFrame Touched button

@@ -5,7 +5,7 @@ import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
-public class CalcPoint {
+class CalcPoint {
     static double calcAngle (Point p1, Point p2, Point p3) {
         // p2を中心とした角度計算
         double c_1x = p1.x - p2.x;

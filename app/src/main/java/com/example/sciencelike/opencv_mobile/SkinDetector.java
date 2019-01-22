@@ -13,7 +13,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 
-public class SkinDetector {
+class SkinDetector {
     private static Scalar sLowerb = new Scalar(0, 60, 70);
     private static Scalar sUpperrb = new Scalar(25, 255, 255);
 
@@ -21,7 +21,7 @@ public class SkinDetector {
         // 色調整用のマーカーを描画する
         int cols = frame.cols();
         int rows = frame.rows();
-        double x = cols/2, y = rows/2;
+        double x = cols/2.0, y = rows/2.0;
         double range = rows/6.0;
 
         Imgproc.circle(frame, new Point(x, y - range), 5, color, 2); // 上

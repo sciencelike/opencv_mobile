@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class OutlineDetector {
-    static MatOfInt hull = new MatOfInt();
+    private static final MatOfInt hull = new MatOfInt();
 
     static MatOfInt getHullData() {
         return hull;

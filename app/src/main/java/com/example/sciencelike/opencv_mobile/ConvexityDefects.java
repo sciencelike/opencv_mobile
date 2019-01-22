@@ -12,8 +12,8 @@ import static com.example.sciencelike.opencv_mobile.CalcPoint.calcAngle;
 import static com.example.sciencelike.opencv_mobile.CalcPoint.calcDistance;
 import static com.example.sciencelike.opencv_mobile.CalcPoint.calcMoment;
 
-public class ConvexityDefects {
-    static private MatOfInt4 convexityDefects = new MatOfInt4();
+class ConvexityDefects {
+    static private final MatOfInt4 convexityDefects = new MatOfInt4();
     static private int points = 0;
     static private Scalar color = new Scalar(0,0,0);
 
@@ -72,11 +72,9 @@ public class ConvexityDefects {
                 }
             }
             points = point;
-            data = null; // gcのためのマーキング?
         }
         catch (ArrayIndexOutOfBoundsException e) {
             // Log.i("ConvexityDefects", e.toString());
-            return;
         }
     }
 }

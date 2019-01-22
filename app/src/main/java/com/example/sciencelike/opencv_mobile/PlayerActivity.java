@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
@@ -31,6 +32,7 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class PlayerActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // VR
@@ -39,20 +41,23 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
     // opencv
     private CameraBridgeViewBase mOpenCvCameraView;
-    public Mat frame;
+    private Mat frame;
 
     // opencv_クリック検出用
-    static int check = 0;
-    static long lastmotionedtime = 0;
-    static float x = 0, y = 0;
-    static ArrayList<Button> button_list = new ArrayList<>();
+    private int check = 0;
+    private long lastmotionedtime = 0;
+    private static float x = 0;
+    private static float y = 0;
+    private final ArrayList<Button> button_list = new ArrayList<>();
 
     // ボタンテスト
-    static int buttonState = 0;
-    static List<Integer> targetList = new ArrayList<>();
-    static int firstButtonId = 0;
-    static int secondButtonId = 0;
-    static int amountButton = 6;
+    private int buttonState = 0;
+    private final List<Integer> targetList = new ArrayList<>();
+    private int firstButtonId = 0;
+    private int secondButtonId = 0;
+    private final int amountButton = 6;
+    private ProgressBar progressBar;
+    private int progressVal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +115,10 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             }
         }
         Collections.shuffle(targetList);
+
+        // プログレスバー
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(30);
 
         LogWriter.writeData("Start PlayerActivity");
     }
@@ -171,7 +180,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             ConvexityDefects.convexityDefects(frame, contours, hull, false);
         }
 
-        if (maxArea.size() > 0) {
+        if (Objects.requireNonNull(maxArea).size() > 0) {
             // ポインタに使う先端取得
             List<Point> point_list_tips = maxArea.get(0).toList();
             int index_maxdistancefinger = 0;
@@ -223,11 +232,12 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
     public void onCameraViewStopped() {}
 
-    public void initButtonState() {
+    private void initButtonState() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for(int i=1; i<=9; i++) {
+                    if(i==8) continue;
                     int viewId = getResources().getIdentifier("Button_" + i, "id", getPackageName());
                     findViewById(viewId).setVisibility(View.INVISIBLE);
                 }
@@ -238,7 +248,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
         });
     }
 
-    public void changeButtonState(final int number) {
+    private void changeButtonState(final int number) {
         initButtonState();
 
         runOnUiThread(new Runnable() {
@@ -264,7 +274,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
         buttonState=2;
     }
 
-    public void invisibleButton() {
+    private void invisibleButton() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -322,33 +332,21 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                 if(buttonState==3 && secondButtonId==R.id.Button_6) buttonState = 1;
 
                 break;
-
-            /*
-            case R.id.Button_7:
-                Log.d("PlayerActivity Button", "Touched Button7");
-                if(buttonState==2 && firstButtonId==R.id.Button_7) invisibleButton();
-                if(buttonState==3 && secondButtonId==R.id.Button_7) buttonState = 1;
-
-                break;
-
-            case R.id.Button_8:
-                Log.d("PlayerActivity Button", "Touched Button8");
-                if(buttonState==2 && firstButtonId==R.id.Button_8) invisibleButton();
-                if(buttonState==3 && secondButtonId==R.id.Button_8) buttonState = 1;
-
-                break;
-
-            case R.id.Button_9:
-                Log.d("PlayerActivity Button", "Touched Button9");
-                if(buttonState==2 && firstButtonId==R.id.Button_9) invisibleButton();
-                if(buttonState==3 && secondButtonId==R.id.Button_9) buttonState = 1;
-
-                break;
-            */
         }
 
         if(targetList.size()!=0) {
             if(buttonState==1) {
+                // プログレスバー進捗更新
+                progressBar.setProgress(progressVal+=1);
+
+                // 待ち時間
+                long nextchangetime = SystemClock.uptimeMillis() + 500 + (long)(Math.random()*1000);
+                Log.d("",String.valueOf(nextchangetime) + " " + String.valueOf(SystemClock.uptimeMillis()));
+                while(nextchangetime > SystemClock.uptimeMillis()) {
+                    Log.d("",String.valueOf(nextchangetime) + " " + String.valueOf(SystemClock.uptimeMillis()));
+                }
+
+                // 次のターゲット表示
                 int number = targetList.get(0);
                 targetList.remove(0);
                 changeButtonState(number);
@@ -388,7 +386,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     }
 
     // Initialize OpenCV manager.
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+    private final BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
             switch (status) {
@@ -406,7 +404,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     };
 
     // カメラ起動
-    public void launchCamera() {
+    private void launchCamera() {
         mOpenCvCameraView = findViewById(R.id.player_CameraView);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         // ここでカメラの最大解像度を設定する
