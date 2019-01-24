@@ -17,6 +17,8 @@ class OutlineDetector {
         return hull;
     }
 
+    static int check=0;
+
     static List<MatOfPoint> getLineData(MatOfPoint contours) {
         if (contours == null) {
             throw new IllegalArgumentException("parameter must not be null");
@@ -51,14 +53,13 @@ class OutlineDetector {
 
                     // 領域の重心からの距離が長い方を残す
                     if (CalcPoint.calcDistance(hullPoint.get(i), point_moment) < CalcPoint.calcDistance(hullPoint.get(i+1 == size ? 0 : i+1), point_moment)) {
-                        hullPoint.remove(hullPoint.get(i));
+                        if(check==1) hullPoint.remove(hullPoint.get(i));
                         size = hullPoint.size();
                     } else {
-                        hullPoint.remove(hullPoint.get(i+1 == size ? 0 : i+1));
+                        if(check==1) hullPoint.remove(hullPoint.get(i+1 == size ? 0 : i+1));
                         size = hullPoint.size();
                     }
-                    // if (i!=0) i-=1;
-                    i-=1;
+                    if(check==1) i-=1;
                 }
             }
         }

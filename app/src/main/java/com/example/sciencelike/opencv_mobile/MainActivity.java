@@ -176,14 +176,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // http://www.kochi-tech.ac.jp/library/ron/2011/2011ele/1141009.pdf 指先検出とかいろいろ
         // https://dev.to/amarlearning/finger-detection-and-tracking-using-opencv-and-python-586m 実例
 
-        if(true) {
-            Mat temp = new Mat();
-            frame.copyTo(temp);
-            Imgproc.cvtColor(SkinDetector.getrawdata(frame), temp, Imgproc.COLOR_GRAY2RGB);
-            SkinDetector.setSkinMarker(temp, LINE_COLOR_G);
-            return temp;
-        }
-
         // 目印描画
         SkinDetector.setSkinMarker(frame, LINE_COLOR_G);
 
@@ -206,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             // 生最大面積輪郭描画
             List<MatOfPoint> temp = new ArrayList<>();
             temp.add(contours);
-            Imgproc.drawContours(frame, temp, -1, LINE_COLOR_R);
+            // Imgproc.drawContours(frame, temp, -1, LINE_COLOR_R, 2);
 
             // 先端描画
             List<Point> point_list_tips = maxArea.get(0).toList();
@@ -219,17 +211,20 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                     index_maxdistancefinger = i;
                 }
             }
+
             Imgproc.circle(frame, new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), 5, LINE_COLOR_b, 5);
 
             // 凸包輪郭描画
             Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
 
+            // 重心描画
+            Imgproc.line(frame, point_moment, point_moment, LINE_COLOR_W, 5);
+
+            if(true) return frame;
+
             // 凹点集合描画
             ConvexityDefects.setColor(LINE_COLOR_B);
             ConvexityDefects.convexityDefects(frame, contours, OutlineDetector.getHullData(), true);
-
-            // 重心描画
-            Imgproc.line(frame, point_moment, point_moment, LINE_COLOR_W, 5);
 
 
             // デバッグ用
@@ -309,20 +304,17 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         @Override
         public boolean onSingleTapUp(MotionEvent event) {
             Log.i("MainActivity Gesture","SingleTapUp ");
-
-            byte[] data = SkinDetector.setSkinColorRange(frame);
-            Context context = getApplicationContext();
-            Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_LONG);
-            t.show();
-
+            if(OutlineDetector.check==0) OutlineDetector.check=1;
+            else OutlineDetector.check=0;
             return super.onSingleTapUp(event);
         }
         @Override
         public void onLongPress(MotionEvent event) {
             Log.i("MainActivity Gesture","LongPress ");
-
-            if(SkinDetector.methodstate==0) SkinDetector.methodstate=1;
-            else SkinDetector.methodstate=0;
+            byte[] data = SkinDetector.setSkinColorRange(frame);
+            Context context = getApplicationContext();
+            Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_LONG);
+            t.show();
         }
     };
 

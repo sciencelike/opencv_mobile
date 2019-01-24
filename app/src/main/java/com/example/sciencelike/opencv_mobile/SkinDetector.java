@@ -83,27 +83,7 @@ public class SkinDetector {
         return hsv_value[1];
     }
 
-    static int methodstate = 0;
-
-    static Mat getrawdata(Mat rgba) {
-        if (rgba == null) {
-            throw new IllegalArgumentException("E SkinDetector parameter must not be null");
-        }
-
-        Mat hsv = new Mat();
-        Imgproc.cvtColor(rgba, hsv, Imgproc.COLOR_RGB2HSV);
-
-        Imgproc.blur(hsv, hsv, new Size(3, 3));
-        Core.inRange(hsv, sLowerb, sUpperrb, hsv);
-
-        if(methodstate!=0) {
-            Imgproc.morphologyEx(hsv, hsv, Imgproc.MORPH_OPEN, Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(3,3), new Point(-1, -1)));
-        }
-
-        return hsv;
-    }
-
-    static MatOfPoint getMaxSkinArea(Mat rgba) {
+    public static MatOfPoint getMaxSkinArea(Mat rgba) {
         if (rgba == null) {
             throw new IllegalArgumentException("E SkinDetector parameter must not be null");
         }
@@ -121,7 +101,7 @@ public class SkinDetector {
         // MORPH_CROSS → オープニング処理をどの形でやるか CROSSは十字の形
         // Size → CROSSのサイズと多分基準点 -1 -1 で中心?
 
-        // Imgproc.morphologyEx(hsv, hsv, Imgproc.MORPH_OPEN, Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(3,3), new Point(-1, -1)));
+        Imgproc.morphologyEx(hsv, hsv, Imgproc.MORPH_OPEN, Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(3,3), new Point(-1, -1)));
 
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat(hsv.cols(), hsv.rows(), CvType.CV_32SC1);
