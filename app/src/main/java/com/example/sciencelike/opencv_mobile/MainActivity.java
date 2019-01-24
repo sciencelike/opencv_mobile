@@ -176,10 +176,16 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // http://www.kochi-tech.ac.jp/library/ron/2011/2011ele/1141009.pdf 指先検出とかいろいろ
         // https://dev.to/amarlearning/finger-detection-and-tracking-using-opencv-and-python-586m 実例
 
+        if(true) {
+            Mat temp = new Mat();
+            frame.copyTo(temp);
+            Imgproc.cvtColor(SkinDetector.getrawdata(frame), temp, Imgproc.COLOR_GRAY2RGB);
+            SkinDetector.setSkinMarker(temp, LINE_COLOR_G);
+            return temp;
+        }
+
         // 目印描画
         SkinDetector.setSkinMarker(frame, LINE_COLOR_G);
-
-        if(true) return frame;
 
         // 手の最大面積の領域取得 (輪郭ではない)
         MatOfPoint contours = SkinDetector.getMaxSkinArea(frame);
@@ -303,17 +309,20 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         @Override
         public boolean onSingleTapUp(MotionEvent event) {
             Log.i("MainActivity Gesture","SingleTapUp ");
+
+            byte[] data = SkinDetector.setSkinColorRange(frame);
+            Context context = getApplicationContext();
+            Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_LONG);
+            t.show();
+
             return super.onSingleTapUp(event);
         }
         @Override
         public void onLongPress(MotionEvent event) {
             Log.i("MainActivity Gesture","LongPress ");
 
-            byte[] data = SkinDetector.setSkinColorRange(frame);
-
-            Context context = getApplicationContext();
-            Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_LONG);
-            t.show();
+            if(SkinDetector.methodstate==0) SkinDetector.methodstate=1;
+            else SkinDetector.methodstate=0;
         }
     };
 
