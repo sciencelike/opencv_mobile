@@ -30,8 +30,7 @@ class OutlineDetector {
 
         // 距離が近い頂点を削除
         List<Point> hullPoint = new ArrayList<>();
-        List<Integer> hullContourIdxList = new ArrayList<>();
-        hullContourIdxList.addAll(hull.toList());
+        List<Integer> hullContourIdxList = new ArrayList<>(hull.toList());
 
         for (int i = 0; i < hullContourIdxList.size(); i++) {
             hullPoint.add(contourArray[hullContourIdxList.get(i)]);
