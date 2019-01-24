@@ -30,7 +30,8 @@ class OutlineDetector {
 
         // 距離が近い頂点を削除
         List<Point> hullPoint = new ArrayList<>();
-        List<Integer> hullContourIdxList = hull.toList();
+        List<Integer> hullContourIdxList = new ArrayList<>();
+        hullContourIdxList.addAll(hull.toList());
 
         for (int i = 0; i < hullContourIdxList.size(); i++) {
             hullPoint.add(contourArray[hullContourIdxList.get(i)]);
@@ -52,9 +53,11 @@ class OutlineDetector {
                     // 領域の重心からの距離が長い方を残す
                     if (CalcPoint.calcDistance(hullPoint.get(i), point_moment) < CalcPoint.calcDistance(hullPoint.get(i+1 == size ? 0 : i+1), point_moment)) {
                         hullPoint.remove(hullPoint.get(i));
+                        hullContourIdxList.remove(i);
                         size = hullPoint.size();
                     } else {
                         hullPoint.remove(hullPoint.get(i+1 == size ? 0 : i+1));
+                        hullContourIdxList.remove(i+1 == size ? 0 : i+1);
                         size = hullPoint.size();
                     }
                     // if (i!=0) i-=1;
@@ -65,6 +68,8 @@ class OutlineDetector {
         catch (IndexOutOfBoundsException e) {
             Log.i("OutlineDetector", e.toString());
         }
+
+        hull.fromList(hullContourIdxList);
 
         Point[] hullPoints = new Point[hullPoint.size()];
         for (int i = 0; i < hullPoint.size(); i++) {

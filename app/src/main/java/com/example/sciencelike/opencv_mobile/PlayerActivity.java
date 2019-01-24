@@ -341,9 +341,9 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
                 // 待ち時間
                 long nextchangetime = SystemClock.uptimeMillis() + 500 + (long)(Math.random()*1000);
-                Log.d("",String.valueOf(nextchangetime) + " " + String.valueOf(SystemClock.uptimeMillis()));
+                // Log.d("",String.valueOf(nextchangetime) + " " + String.valueOf(SystemClock.uptimeMillis()));
                 while(nextchangetime > SystemClock.uptimeMillis()) {
-                    Log.d("",String.valueOf(nextchangetime) + " " + String.valueOf(SystemClock.uptimeMillis()));
+                    // Log.d("",String.valueOf(nextchangetime) + " " + String.valueOf(SystemClock.uptimeMillis()));
                 }
 
                 // 次のターゲット表示
