@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         mOpenCvCameraView.setMaxFrameSize(960, 540);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-        LogWriter.writeData("MainActivity_onCreate_camerasizeHW", mOpenCvCameraView.mFrameHeight, mOpenCvCameraView.mFrameWidth);
+        LogWriter.writeData(SystemClock.uptimeMillis(), "MainActivity_onCreate_camerasizeHW", mOpenCvCameraView.mFrameHeight, mOpenCvCameraView.mFrameWidth);
     }
 
     public void onCameraViewStarted(int width, int height) {
@@ -213,7 +213,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                     index_maxdistancefinger = i;
                 }
             }
-            Imgproc.circle(frame, new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), 5, LINE_COLOR_b, 5);
+            if(ConvexityDefects.getPointsNumber()==0) Imgproc.circle(frame, new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), 5, LINE_COLOR_W, 5);
+            else Imgproc.circle(frame, new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), 5, LINE_COLOR_b, 5);
 
             // 凸包輪郭描画
             Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
@@ -238,7 +239,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             }
 
             // クリック判定とボタン動作
-            if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+1000) {
+            if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+200) {
+
                 Log.i("MainActivity Touchtest","Single Touch " + x + " " + y);
                 lastmotionedtime = SystemClock.uptimeMillis();
                 check = 0;
@@ -251,19 +253,19 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 if(x >= location[0] && x <= (location[0]+button_r.getWidth()) && y >= location[1] && y <= (location[1]+button_r.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_r");
                     findViewById(R.id.Button_r).setBackgroundColor(0x96ffffff);
-                    LogWriter.writeData("MainActivity_onCameraFrame_Touched button", "Button_r");
+                    LogWriter.writeData(SystemClock.uptimeMillis(), "MainActivity_onCameraFrame_Touched button","Button_r");
                 }
                 button_g.getLocationInWindow(location);
                 if(x >= location[0] && x <= (location[0]+button_g.getWidth()) && y >= location[1] && y <= (location[1]+button_g.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_g");
                     findViewById(R.id.Button_g).setBackgroundColor(0x96ffffff);
-                    LogWriter.writeData("MainActivity_onCameraFrame_Touched button", "Button_g");
+                    LogWriter.writeData(SystemClock.uptimeMillis(), "MainActivity_onCameraFrame_Touched button", "Button_g");
                     button_click(findViewById(R.id.Button_g));
                 }
                 button_b.getLocationInWindow(location);
                 if(x >= location[0] && x <= (location[0]+button_b.getWidth()) && y >= location[1] && y <= (location[1]+button_b.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_b");
-                    LogWriter.writeData("MainActivity_onCameraFrame_Touched button", "Button_b");
+                    LogWriter.writeData(SystemClock.uptimeMillis(), "MainActivity_onCameraFrame_Touched button", "Button_b");
                     findViewById(R.id.Button_b).setBackgroundColor(0x96ffffff);
                     button_click(findViewById(R.id.Button_b));
                 }
@@ -271,6 +273,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             if(ConvexityDefects.getPointsNumber() >= 2) {
                 check = 0;
             }
+
+
         }
 
         // TODO 手の輪郭検出→領域少し拡大→マスク作成→Cannyでエッジ検出→ハフ変換で指の直線成分検出→→指の向きを知りたい

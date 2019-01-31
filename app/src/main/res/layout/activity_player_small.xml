@@ -166,4 +166,14 @@
             </Button>
         </RelativeLayout>
     </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/PointerCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/pointer_circle"
+        opencv:layout_constraintStart_toStartOf="parent"
+        opencv:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"></LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

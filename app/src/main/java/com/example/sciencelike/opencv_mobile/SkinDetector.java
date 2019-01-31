@@ -1,5 +1,6 @@
 package com.example.sciencelike.opencv_mobile;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 import org.opencv.core.Core;
@@ -36,7 +37,7 @@ class SkinDetector {
         sUpperrb = new Scalar(h_u, s_u, v_u);
 
         Log.i("SkinDetector", "set hsv range: " + h_l + " " + s_l + " " + v_l + " → " + h_u + " " + s_u + " " + v_u);
-        LogWriter.writeData("SkinDetector_setSkinColorRange", h_l, s_l, v_l, h_u, s_u, v_u);
+        LogWriter.writeData(SystemClock.uptimeMillis(), "SkinDetector_setSkinColorRange", h_l, s_l, v_l, h_u, s_u, v_u);
     }
 
     public static byte[] setSkinColorRange(Mat frame) {

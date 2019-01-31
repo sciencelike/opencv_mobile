@@ -3,16 +3,20 @@ package com.example.sciencelike.opencv_mobile;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
@@ -41,7 +45,6 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
     // opencv
     private CameraBridgeViewBase mOpenCvCameraView;
-    private Mat frame;
 
     // opencv_クリック検出用
     private int check = 0;
@@ -58,6 +61,10 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     private final int amountButton = 6;
     private ProgressBar progressBar;
     private int progressVal = 0;
+
+    // ポインタ改
+    static Handler handler = new Handler(Looper.getMainLooper());
+    LinearLayout pointer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +104,8 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             button_list.add(temp);
         }
 
-        // ポインタ描画
-        //オーバーレイビューの追加
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        addContentView(new OverlayPointer(this), params);
+        // ポインタ描画改
+        pointer = findViewById(R.id.PointerCircle);
 
         // 画面消灯を無効化する
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -120,7 +125,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
         progressBar = findViewById(R.id.progressBar);
         progressBar.setMax(30);
 
-        LogWriter.writeData("Start PlayerActivity");
+        LogWriter.writeData(SystemClock.uptimeMillis(), "Start PlayerActivity");
     }
 
     @Override
@@ -161,7 +166,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         // Get a new frame
-        frame = inputFrame.rgba();
+        Mat frame = inputFrame.rgba();
 
         // 手の最大面積の領域取得 (輪郭ではない)
         MatOfPoint contours = SkinDetector.getMaxSkinArea(frame);
@@ -199,22 +204,24 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             // クリックトリガー
             if(ConvexityDefects.getPointsNumber() == 0) {
                 check = 1;
+                // ポインタ色変更
+                setPointerColor(true);
             }
             // クリック動作
             if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+200) {
-                Log.i("PlayerActivity Touchtest","Single Touch " + x + " " + y);
-
                 lastmotionedtime = SystemClock.uptimeMillis();
                 check = 0;
 
-                int[] location = new int[2];
+                // ポインタ色変更
+                setPointerColor(false);
 
                 // ボタンの当たり判定処理
+                int[] location = new int[2];
                 for(int i=1; i<=amountButton; i++){
                     button_list.get(i-1).getLocationInWindow(location);
                     if(x >= location[0] && x <= (location[0]+button_list.get(i-1).getWidth()) && y >= location[1] && y <= (location[1]+button_list.get(i-1).getHeight())) {
                         Log.i("PlayerActivity Touchtest", "Touched button_" + i);
-                        LogWriter.writeData("PlayerActivity_onCameraFrame_Touched button", Integer.toString(i));
+                        LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Touched button", Integer.toString(i));
                         button_click(button_list.get(i-1));
                     }
                 }
@@ -224,13 +231,45 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             }
         }
 
-        LogWriter.writeData("PlayerActivity_onCameraFrame_ConvexityDefectsAmount", ConvexityDefects.getPointsNumber());
-        LogWriter.writeData("PlayerActivity_onCameraFrame_Pointer", x, y);
+        LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_ConvexityDefectsAmount", ConvexityDefects.getPointsNumber());
+        LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Pointer", x, y);
+
+        // ポインタ描画改
+        multithread thread_pointer = new multithread(this);
+        thread_pointer.start();
 
         return frame;
     }
 
     public void onCameraViewStopped() {}
+
+    private void setPointerColor(final boolean state) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(state) {
+                    pointer.getBackground().setColorFilter(Color.parseColor("#FF0000FF"), PorterDuff.Mode.SRC_IN);
+                }
+                else {
+                    pointer.getBackground().setColorFilter(Color.parseColor("#FFFF0000"), PorterDuff.Mode.SRC_IN);
+                }
+            }
+        });
+    }
+
+    private void setPointerVisibility(final boolean state) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(state) {
+                    pointer.setAlpha(1);
+                }
+                else {
+                    pointer.setAlpha(0);
+                }
+            }
+        });
+    }
 
     private void initButtonState() {
         runOnUiThread(new Runnable() {
@@ -339,18 +378,26 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                 // プログレスバー進捗更新
                 progressBar.setProgress(progressVal+=1);
 
+                // ポインタ非表示
+                setPointerVisibility(false);
+
+                // ボタン非表示
+                initButtonState();
+
                 // 待ち時間
                 long nextchangetime = SystemClock.uptimeMillis() + 500 + (long)(Math.random()*1000);
-                // Log.d("",String.valueOf(nextchangetime) + " " + String.valueOf(SystemClock.uptimeMillis()));
                 while(nextchangetime > SystemClock.uptimeMillis()) {
-                    // Log.d("",String.valueOf(nextchangetime) + " " + String.valueOf(SystemClock.uptimeMillis()));
+                    continue;
                 }
+
+                // ポインタ表示
+                setPointerVisibility(true);
 
                 // 次のターゲット表示
                 int number = targetList.get(0);
                 targetList.remove(0);
                 changeButtonState(number);
-                LogWriter.writeData("PlayerActivity_buttonclick_buttonorder", number);
+                LogWriter.writeData(SystemClock.uptimeMillis(),"PlayerActivity_buttonclick_buttonorder", number);
             }
         } else if(buttonState==1) {
             finish();

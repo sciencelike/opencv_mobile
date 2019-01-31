@@ -1,5 +1,6 @@
 package com.example.sciencelike.opencv_mobile;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 import org.opencv.core.MatOfInt;
@@ -80,7 +81,7 @@ class OutlineDetector {
         if (hullList.size() == 0) {
             return null;
         }else{
-            LogWriter.writeData("OutlineDetector_getLineData", hullList);
+            LogWriter.writeData(SystemClock.uptimeMillis(), "OutlineDetector_getLineData", hullList);
             return hullList;
         }
     }

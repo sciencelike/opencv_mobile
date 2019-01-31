@@ -1,7 +1,6 @@
 package com.example.sciencelike.opencv_mobile;
 
 import android.os.Environment;
-import android.os.SystemClock;
 
 import org.opencv.core.MatOfPoint;
 
@@ -35,14 +34,14 @@ class LogWriter {
     }
 
     // SkinDetector setSkinColorRange
-    static void writeData(String tag, int h_u, int h_l, int s_u, int s_l, int v_u, int v_l) {
-        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + h_l + "," + s_l + "," + v_l + "," + h_u + "," + s_u + "," + v_u + "\n";
+    static void writeData(long time, String tag, int h_u, int h_l, int s_u, int s_l, int v_u, int v_l) {
+        String str = String.valueOf(time) + "," + tag + "," + h_l + "," + s_l + "," + v_l + "," + h_u + "," + s_u + "," + v_u + "\n";
         saveData(str);
     }
 
     // OutlineDetector getLineData
-    static void writeData(String tag, List<MatOfPoint> hullList) {
-        StringBuilder str = new StringBuilder(String.valueOf(SystemClock.uptimeMillis()) + "," + tag);
+    static void writeData(long time, String tag, List<MatOfPoint> hullList) {
+        StringBuilder str = new StringBuilder(String.valueOf(time) + "," +  tag);
 
         for(int i=0; i<hullList.get(0).toList().size(); i++){
             str.append(",").append(hullList.get(0).toList().get(i).x).append("_").append(hullList.get(0).toList().get(i).y);
@@ -52,31 +51,32 @@ class LogWriter {
     }
 
     // MainActivity + PlayerActivity onCameraFrame Touched button
-    static void writeData(String tag, String buttonId) {
-        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + buttonId + "\n";
+    static void writeData(long time, String tag, String buttonId) {
+        String str = String.valueOf(time) + "," + tag + "," + buttonId + "\n";
         saveData(str);
     }
 
     // PlayerActivity onCameraFrame Touched button
-    static void writeData(String tag, int buttonOrder) {
-        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + buttonOrder + "\n";
+    static void writeData(long time, String tag, int buttonOrder) {
+        String str = String.valueOf(time) + "," + tag + "," + buttonOrder + "\n";
         saveData(str);
     }
 
     // PlayerActivity onCameraFrame Pointer
-    static void writeData(String tag, float x, float y) {
-        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + x + "," + y + "\n";
+    static void writeData(long time, String tag, float x, float y) {
+        String str = String.valueOf(time) + "," + tag + "," + x + "," + y + "\n";
         saveData(str);
     }
 
-    static void writeData(String tag, int x, int y) {
-        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + tag + "," + x + "," + y + "\n";
+    // MainActivity onCreate camerasizeHW
+    static void writeData(long time, String tag, int height, int width) {
+        String str = String.valueOf(time) + "," + tag + "," + height + "," + width + "\n";
         saveData(str);
     }
 
     // PlayerActivity activity change
-    static void writeData(String string) {
-        String str = String.valueOf(SystemClock.uptimeMillis()) + "," + "etc" + "," + string + "\n";
+    static void writeData(long time, String string) {
+        String str = String.valueOf(time) + "," + "etc" + "," + string + "\n";
         saveData(str);
     }
 }
