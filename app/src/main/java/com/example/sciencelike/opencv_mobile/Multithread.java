@@ -3,11 +3,11 @@ package com.example.sciencelike.opencv_mobile;
 import android.content.Context;
 import android.widget.LinearLayout;
 
-public class multithread extends Thread {
+public class Multithread extends Thread {
     public boolean isAttached = true;
     Context context;
 
-    multithread(Context context_arg) {
+    Multithread(Context context_arg) {
         context = context_arg;
     }
 

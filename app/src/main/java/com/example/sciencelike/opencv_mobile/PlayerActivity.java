@@ -235,7 +235,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
         LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Pointer", x, y);
 
         // ポインタ描画改
-        multithread thread_pointer = new multithread(this);
+        Multithread thread_pointer = new Multithread(this);
         thread_pointer.start();
 
         return frame;
