@@ -17,9 +17,6 @@ public class OverlayPointer extends SurfaceView implements SurfaceHolder.Callbac
     private Thread thread;
     private boolean isAttached = true;
 
-    private int x=0;
-    private int y=0;
-
     //コンストラクタ
     public OverlayPointer(Context context) {
         super(context);
@@ -72,8 +69,8 @@ public class OverlayPointer extends SurfaceView implements SurfaceHolder.Callbac
         // メインループ（無限ループ）
         while(isAttached){
             // 表示位置
-            x = (int)PlayerActivity.getCursorPoint()[0];
-            y = (int)PlayerActivity.getCursorPoint()[1];
+            int x = (int) PlayerActivity.getCursorPoint()[0];
+            int y = (int) PlayerActivity.getCursorPoint()[1];
             // Log.i("OverlayPointer Pointtest 2", "Cursor Point" + x + " " + y);
 
             //描画処理を開始

@@ -3,9 +3,8 @@ package com.example.sciencelike.opencv_mobile;
 import android.content.Context;
 import android.widget.LinearLayout;
 
-public class Multithread extends Thread {
-    public boolean isAttached = true;
-    Context context;
+class Multithread extends Thread {
+    private final Context context;
 
     Multithread(Context context_arg) {
         context = context_arg;
@@ -14,7 +13,7 @@ public class Multithread extends Thread {
     public void run() {
         setAsyncTask();
     }
-    public void setAsyncTask() {
+    private void setAsyncTask() {
         PlayerActivity.handler.post(new Runnable() {
             @Override
             public void run() {

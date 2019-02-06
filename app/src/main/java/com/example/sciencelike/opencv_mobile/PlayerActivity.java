@@ -63,8 +63,8 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     private int progressVal = 0;
 
     // ポインタ改
-    static Handler handler = new Handler(Looper.getMainLooper());
-    LinearLayout pointer;
+    static final Handler handler = new Handler(Looper.getMainLooper());
+    private LinearLayout pointer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -387,7 +387,6 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                 // 待ち時間
                 long nextchangetime = SystemClock.uptimeMillis() + 500 + (long)(Math.random()*1000);
                 while(nextchangetime > SystemClock.uptimeMillis()) {
-                    continue;
                 }
 
                 // ポインタ表示
@@ -406,8 +405,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     }
 
     static public float[] getCursorPoint() {
-        float point[] = {x,y};
-        return point;
+        return new float[]{x,y};
     }
 
     // 読み込み用
