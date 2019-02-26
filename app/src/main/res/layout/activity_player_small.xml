@@ -174,6 +174,6 @@
         android:background="@drawable/pointer_circle"
         opencv:layout_constraintStart_toStartOf="parent"
         opencv:layout_constraintTop_toTopOf="parent"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal" />
 
 </android.support.constraint.ConstraintLayout>

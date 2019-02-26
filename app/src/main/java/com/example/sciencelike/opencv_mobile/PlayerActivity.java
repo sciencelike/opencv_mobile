@@ -13,6 +13,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -66,6 +68,9 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     static final Handler handler = new Handler(Looper.getMainLooper());
     private LinearLayout pointer;
 
+    // マウス操作用
+    private GestureDetector mGestureDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // ボタンサイズ変更
@@ -81,8 +86,20 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
         panoWidgetView = findViewById(R.id.player_Vrpanoramaview);
 
-        loadPanoImage();
+        // vr中のマウス操作有効化のための、リスナーset
+        mGestureDetector = new GestureDetector(this, simpleOnGestureListener);
+        panoWidgetView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mGestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
+        panoWidgetView.setFullscreenButtonEnabled(false);
+        panoWidgetView.setInfoButtonEnabled(false);
+        panoWidgetView.setStereoModeButtonEnabled(false);
 
+        loadPanoImage();
 
         // opencv
         // カメラの権限確認
@@ -404,6 +421,37 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
     }
 
+    public boolean onTouchEvent(MotionEvent event) {
+        event.getAction();
+
+        return mGestureDetector.onTouchEvent(event);
+    }
+
+    private final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onDown (MotionEvent event) {
+            Log.i("MainActivity Gesture","Down ");
+            return true;
+        }
+        @Override
+        public boolean onSingleTapUp(MotionEvent event) {
+            Log.i("MainActivity Gesture","SingleTapUp ");
+
+            int[] location = new int[2];
+            for(int i=1; i<=amountButton; i++){
+                button_list.get(i-1).getLocationInWindow(location);
+                if(x >= location[0] && x <= (location[0]+button_list.get(i-1).getWidth()) && y >= location[1] && y <= (location[1]+button_list.get(i-1).getHeight())) {
+                    Log.i("PlayerActivity Touchtest", "Touched button_" + i);
+                    LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Clicked button", Integer.toString(i));
+                    button_click(button_list.get(i-1));
+                }
+            }
+
+            return super.onSingleTapUp(event);
+        }
+    };
+
+
     static public float[] getCursorPoint() {
         return new float[]{x,y};
     }
@@ -420,6 +468,9 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
         // pass in the name of the image to load from assets.
         VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
         viewOptions.inputType = VrPanoramaView.Options.TYPE_MONO;
+
+        // 追記
+        // VrPanoramaView.;
 
         // use the name of the image in the assets/ directory.
         String panoImageName = "mountain.jpg";

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        opencv:show_fps="false"></org.opencv.android.JavaCameraView>
+        opencv:show_fps="false" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:id="@+id/player_Vrpanoramaview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"></com.google.vr.sdk.widgets.pano.VrPanoramaView>
+            android:scrollbars="none" />
 
         <LinearLayout
             style="?android:attr/buttonBarStyle"
@@ -37,7 +37,7 @@
                 android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
-                android:text="@string/button_txt_off"></Button>
+                android:text="@string/button_txt_off" />
 
             <Button
                 android:id="@+id/Button_2"
@@ -48,7 +48,7 @@
                 android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
-                android:text="@string/button_txt_off"></Button>
+                android:text="@string/button_txt_off" />
 
             <Button
                 android:id="@+id/Button_3"
@@ -59,7 +59,7 @@
                 android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
-                android:text="@string/button_txt_off"></Button>
+                android:text="@string/button_txt_off" />
         </LinearLayout>
 
         <LinearLayout
@@ -77,7 +77,7 @@
                 android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
-                android:text="@string/button_txt_off"></Button>
+                android:text="@string/button_txt_off" />
 
             <Button
                 android:id="@+id/Button_5"
@@ -88,7 +88,7 @@
                 android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
-                android:text="@string/button_txt_off"></Button>
+                android:text="@string/button_txt_off" />
 
             <Button
                 android:id="@+id/Button_6"
@@ -99,7 +99,7 @@
                 android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
-                android:text="@string/button_txt_off"></Button>
+                android:text="@string/button_txt_off" />
         </LinearLayout>
 
         <LinearLayout
@@ -117,7 +117,7 @@
                 android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
-                android:text="@string/button_txt_off"></Button>
+                android:text="@string/button_txt_off" />
 
 
             <ProgressBar
@@ -139,7 +139,7 @@
                 android:layout_weight="1"
                 android:background="#96000000"
                 android:onClick="button_click"
-                android:text="@string/button_txt_off"></Button>
+                android:text="@string/button_txt_off" />
         </LinearLayout>
     </FrameLayout>
 
@@ -150,5 +150,5 @@
         android:background="@drawable/pointer_circle"
         opencv:layout_constraintStart_toStartOf="parent"
         opencv:layout_constraintTop_toTopOf="parent"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal" />
 </android.support.constraint.ConstraintLayout>
