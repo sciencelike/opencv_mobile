@@ -1,13 +1,12 @@
 package org.opencv.android;
 
-import java.text.DecimalFormat;
-
-import org.opencv.core.Core;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
+
+import org.opencv.core.Core;
+
+import java.text.DecimalFormat;
 
 public class FpsMeter {
     private static final String TAG               = "FpsMeter";
@@ -60,7 +59,7 @@ public class FpsMeter {
 
     public void draw(Canvas canvas, float offsetx, float offsety) {
         // Log.d(TAG, mStrfps);
-        int xPos = (int) (canvas.getWidth() / 2);
+        int xPos = (canvas.getWidth() / 2);
         int yPos = (int) ((canvas.getHeight()) - (mPaint.descent() + mPaint.ascent())/2);
         int padding = 30;
         // canvas.drawText(mStrfps, offsetx, offsety, mPaint); // x_20 y_30
