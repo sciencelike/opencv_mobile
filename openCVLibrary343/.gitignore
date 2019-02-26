@@ -21,6 +21,7 @@ proguard/
 *.ipr
 *.iws
 app/build/
+openCVLibrary343/build
 
 .idea/*.xml
 
