@@ -35,6 +35,11 @@ class ConvexityDefects {
             throw new IllegalArgumentException("E ConvexityDefects parameter must not be null");
         }
 
+        Mat img_blured = new Mat();
+        img.copyTo(img_blured);
+
+        Imgproc.medianBlur(img, img_blured, 3);
+
         // 凹点計算
         Point data[] = contour.toArray();
         Imgproc.convexityDefects(contour, hull, convexityDefects);
