@@ -222,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
 
             // 凹点集合描画
-            ConvexityDefects.setColor(LINE_COLOR_B);
             ConvexityDefects.convexityDefects(frame, contours, OutlineDetector.getHullData(), true);
 
             // 重心描画
