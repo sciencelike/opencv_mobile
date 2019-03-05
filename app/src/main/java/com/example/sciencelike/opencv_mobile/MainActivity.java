@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     @Override
     public void onResume() {
-        Log.d("onResume","run");
+        Log.d("onResume", "run");
         super.onResume();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, mLoaderCallback);
     }
@@ -68,22 +68,22 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         mGestureDetector = new GestureDetector(this, simpleOnGestureListener);
 
         // カメラの権限確認
-        Log.d("onCreate","Permisson Check");
+        Log.d("onCreate", "Permisson Check");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("onCreate","Permisson Granted: CAMERA");
+            Log.d("onCreate", "Permisson Granted: CAMERA");
             // Set up camera listener.
             launchCamera();
         } else {
-            Log.d("onCreate","Permisson Not Found: CAMERA");
+            Log.d("onCreate", "Permisson Not Found: CAMERA");
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.CAMERA
             }, 1);
         }
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("onCreate","Permisson Granted: WRITE_EXTERNAL_STORAGE");
-        }  else {
-            Log.d("onCreate","Permisson Not Found: WRITE_EXTERNAL_STORAGE");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.d("onCreate", "Permisson Granted: WRITE_EXTERNAL_STORAGE");
+        } else {
+            Log.d("onCreate", "Permisson Not Found: WRITE_EXTERNAL_STORAGE");
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 1);
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(hasFocus) {
+        if (hasFocus) {
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     }
 
     // 暫定的ボタン対応
-    public void button_click (View view) {
+    public void button_click(View view) {
         final String s_on = getResources().getString(R.string.button_txt_on);
         final String s_off = getResources().getString(R.string.button_txt_off);
         Intent intent = new Intent(this, PlayerActivity.class);
@@ -161,11 +161,11 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        Scalar LINE_COLOR_W = new Scalar(255,255,255);
-        Scalar LINE_COLOR_b = new Scalar(0,0,0);
-        Scalar LINE_COLOR_R = new Scalar(255,0,0);
-        Scalar LINE_COLOR_G = new Scalar(0,255,0);
-        Scalar LINE_COLOR_B = new Scalar(0,0,255);
+        Scalar LINE_COLOR_W = new Scalar(255, 255, 255);
+        Scalar LINE_COLOR_b = new Scalar(0, 0, 0);
+        Scalar LINE_COLOR_R = new Scalar(255, 0, 0);
+        Scalar LINE_COLOR_G = new Scalar(0, 255, 0);
+        Scalar LINE_COLOR_B = new Scalar(0, 0, 255);
 
         // Get a new frame
         frame = inputFrame.rgba();
@@ -209,12 +209,14 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 Point point_tips = new Point(point_list_tips.get(i).x, point_list_tips.get(i).y);
                 Imgproc.circle(frame, point_tips, 5, LINE_COLOR_W, 2);
 
-                if(CalcPoint.calcDistance(new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), point_moment) < CalcPoint.calcDistance(point_tips, point_moment)) {
+                if (CalcPoint.calcDistance(new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), point_moment) < CalcPoint.calcDistance(point_tips, point_moment)) {
                     index_maxdistancefinger = i;
                 }
             }
-            if(ConvexityDefects.getPointsNumber()==0) Imgproc.circle(frame, new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), 5, LINE_COLOR_W, 5);
-            else Imgproc.circle(frame, new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), 5, LINE_COLOR_b, 5);
+            if (ConvexityDefects.getPointsNumber() == 0)
+                Imgproc.circle(frame, new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), 5, LINE_COLOR_W, 5);
+            else
+                Imgproc.circle(frame, new Point(point_list_tips.get(index_maxdistancefinger).x, point_list_tips.get(index_maxdistancefinger).y), 5, LINE_COLOR_b, 5);
 
             // 凸包輪郭描画
             Imgproc.drawContours(frame, maxArea, -1, LINE_COLOR_G);
@@ -232,16 +234,16 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             // Log.i("MainActivity",String.valueOf(Imgproc.contourArea(contours)));
 
             // 実画面とopencv viewのスケーリング
-            float x = (float)point_list_tips.get(index_maxdistancefinger).x * mOpenCvCameraView.mScale;
-            float y = (float)point_list_tips.get(index_maxdistancefinger).y * mOpenCvCameraView.mScale;
-            if(ConvexityDefects.getPointsNumber() == 0) {
+            float x = (float) point_list_tips.get(index_maxdistancefinger).x * mOpenCvCameraView.mScale;
+            float y = (float) point_list_tips.get(index_maxdistancefinger).y * mOpenCvCameraView.mScale;
+            if (ConvexityDefects.getPointsNumber() == 0) {
                 check = 1;
             }
 
             // クリック判定とボタン動作
-            if(ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime+200) {
+            if (ConvexityDefects.getPointsNumber() == 1 && check == 1 && SystemClock.uptimeMillis() >= lastmotionedtime + 200) {
 
-                Log.i("MainActivity Touchtest","Single Touch " + x + " " + y);
+                Log.i("MainActivity Touchtest", "Single Touch " + x + " " + y);
                 lastmotionedtime = SystemClock.uptimeMillis();
                 check = 0;
 
@@ -250,27 +252,27 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 Button button_g = findViewById(R.id.Button_g);
                 Button button_b = findViewById(R.id.Button_b);
                 button_r.getLocationInWindow(location);
-                if(x >= location[0] && x <= (location[0]+button_r.getWidth()) && y >= location[1] && y <= (location[1]+button_r.getHeight())) {
+                if (x >= location[0] && x <= (location[0] + button_r.getWidth()) && y >= location[1] && y <= (location[1] + button_r.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_r");
                     findViewById(R.id.Button_r).setBackgroundColor(0x96ffffff);
-                    LogWriter.writeData(SystemClock.uptimeMillis(), "MainActivity_onCameraFrame_Touched button","Button_r");
+                    LogWriter.writeData(SystemClock.uptimeMillis(), "MainActivity_onCameraFrame_Touched button", "Button_r");
                 }
                 button_g.getLocationInWindow(location);
-                if(x >= location[0] && x <= (location[0]+button_g.getWidth()) && y >= location[1] && y <= (location[1]+button_g.getHeight())) {
+                if (x >= location[0] && x <= (location[0] + button_g.getWidth()) && y >= location[1] && y <= (location[1] + button_g.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_g");
                     findViewById(R.id.Button_g).setBackgroundColor(0x96ffffff);
                     LogWriter.writeData(SystemClock.uptimeMillis(), "MainActivity_onCameraFrame_Touched button", "Button_g");
                     button_click(findViewById(R.id.Button_g));
                 }
                 button_b.getLocationInWindow(location);
-                if(x >= location[0] && x <= (location[0]+button_b.getWidth()) && y >= location[1] && y <= (location[1]+button_b.getHeight())) {
+                if (x >= location[0] && x <= (location[0] + button_b.getWidth()) && y >= location[1] && y <= (location[1] + button_b.getHeight())) {
                     Log.i("MainActivity Touchtest", "Touched button_b");
                     LogWriter.writeData(SystemClock.uptimeMillis(), "MainActivity_onCameraFrame_Touched button", "Button_b");
                     findViewById(R.id.Button_b).setBackgroundColor(0x96ffffff);
                     button_click(findViewById(R.id.Button_b));
                 }
             }
-            if(ConvexityDefects.getPointsNumber() >= 2) {
+            if (ConvexityDefects.getPointsNumber() >= 2) {
                 check = 0;
             }
 
@@ -298,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         if (e.getAction() == KeyEvent.ACTION_DOWN) {
             //キーコード表示
             Log.d("KeyCode", "KeyCode:" + e.getKeyCode());
-            if(e.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            if (e.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
                 byte[] data = SkinDetector.setSkinColorRange(frame);
 
                 Context context = getApplicationContext();
@@ -320,22 +322,25 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     private final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
-        public boolean onDown (MotionEvent event) {
-            Log.i("MainActivity Gesture","Down ");
+        public boolean onDown(MotionEvent event) {
+            Log.i("MainActivity Gesture", "Down ");
             return true;
         }
+
         @Override
         public boolean onSingleTapUp(MotionEvent event) {
-            Log.i("MainActivity Gesture","SingleTapUp ");
+            Log.i("MainActivity Gesture", "SingleTapUp ");
             return super.onSingleTapUp(event);
         }
+
         @Override
         public void onLongPress(MotionEvent event) {
-            Log.i("MainActivity Gesture","LongPress ");
+            Log.i("MainActivity Gesture", "LongPress ");
         }
     };
 
-    public void onCameraViewStopped() {}
+    public void onCameraViewStopped() {
+    }
 
     // クリック検出用
     private static int check = 0;

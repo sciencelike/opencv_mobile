@@ -28,7 +28,7 @@ class ImageLoaderTask extends AsyncTask<AssetManager, Void, Bitmap> {
             return lastBitmap.get();
         }
 
-        try(InputStream istr = assetManager.open(assetName)) {
+        try (InputStream istr = assetManager.open(assetName)) {
             Bitmap b = BitmapFactory.decodeStream(istr);
             lastBitmap = new WeakReference<>(b);
             lastName = assetName;

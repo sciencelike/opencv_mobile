@@ -14,12 +14,12 @@ import java.util.List;
 class LogWriter {
     static private final String filePath = Environment.getExternalStorageDirectory().getPath() + "/test.csv";
 
-    static private boolean checkStorageState(){
+    static private boolean checkStorageState() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     static private void saveData(String str) {
-        if(checkStorageState()) {
+        if (checkStorageState()) {
             File file = new File(filePath);
             try (FileOutputStream fileOutputStream = new FileOutputStream(file, true);
                  OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
@@ -41,9 +41,9 @@ class LogWriter {
 
     // OutlineDetector getLineData
     static void writeData(long time, String tag, List<MatOfPoint> hullList) {
-        StringBuilder str = new StringBuilder(String.valueOf(time) + "," +  tag);
+        StringBuilder str = new StringBuilder(String.valueOf(time) + "," + tag);
 
-        for(int i=0; i<hullList.get(0).toList().size(); i++){
+        for (int i = 0; i < hullList.get(0).toList().size(); i++) {
             str.append(",").append(hullList.get(0).toList().get(i).x).append("_").append(hullList.get(0).toList().get(i).y);
         }
         str.append("\n");

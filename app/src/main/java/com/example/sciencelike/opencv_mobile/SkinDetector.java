@@ -22,8 +22,8 @@ class SkinDetector {
         // 色調整用のマーカーを描画する
         int cols = frame.cols();
         int rows = frame.rows();
-        double x = cols/2.0, y = rows/2.0;
-        double range = rows/6.0;
+        double x = cols / 2.0, y = rows / 2.0;
+        double range = rows / 6.0;
 
         Imgproc.circle(frame, new Point(x, y - range), 5, color, 2); // 上
         Imgproc.circle(frame, new Point(x, y), 5, color, 2); // 真ん中
@@ -45,8 +45,8 @@ class SkinDetector {
 
         int cols = frame.cols();
         int rows = frame.rows();
-        int range = rows/6;
-        int y = cols/2, x = rows/2;
+        int range = rows / 6;
+        int y = cols / 2, x = rows / 2;
         double rangescale = 0.30;
 
         Mat hsv = new Mat(cols, rows, CvType.CV_8U);
@@ -63,13 +63,19 @@ class SkinDetector {
 
         int h_u = 0, h_l = 255, s_u = 0, s_l = 255, v_u = 0, v_l = 255;
 
-        for (int i = 0; i <= 4; i++){
-            if (Byte.toUnsignedInt(hsv_value[i][0]) > h_u) h_u = Byte.toUnsignedInt(hsv_value[i][0]);
-            if (Byte.toUnsignedInt(hsv_value[i][0]) < h_l) h_l = Byte.toUnsignedInt(hsv_value[i][0]);
-            if (Byte.toUnsignedInt(hsv_value[i][1]) > s_u) s_u = Byte.toUnsignedInt(hsv_value[i][1]);
-            if (Byte.toUnsignedInt(hsv_value[i][1]) < s_l) s_l = Byte.toUnsignedInt(hsv_value[i][1]);
-            if (Byte.toUnsignedInt(hsv_value[i][2]) > v_u) v_u = Byte.toUnsignedInt(hsv_value[i][2]);
-            if (Byte.toUnsignedInt(hsv_value[i][2]) < v_l) v_l = Byte.toUnsignedInt(hsv_value[i][2]);
+        for (int i = 0; i <= 4; i++) {
+            if (Byte.toUnsignedInt(hsv_value[i][0]) > h_u)
+                h_u = Byte.toUnsignedInt(hsv_value[i][0]);
+            if (Byte.toUnsignedInt(hsv_value[i][0]) < h_l)
+                h_l = Byte.toUnsignedInt(hsv_value[i][0]);
+            if (Byte.toUnsignedInt(hsv_value[i][1]) > s_u)
+                s_u = Byte.toUnsignedInt(hsv_value[i][1]);
+            if (Byte.toUnsignedInt(hsv_value[i][1]) < s_l)
+                s_l = Byte.toUnsignedInt(hsv_value[i][1]);
+            if (Byte.toUnsignedInt(hsv_value[i][2]) > v_u)
+                v_u = Byte.toUnsignedInt(hsv_value[i][2]);
+            if (Byte.toUnsignedInt(hsv_value[i][2]) < v_l)
+                v_l = Byte.toUnsignedInt(hsv_value[i][2]);
         }
 
         h_u += rangescale * (h_u + h_l) / 2;
@@ -102,7 +108,7 @@ class SkinDetector {
         // MORPH_CROSS → オープニング処理をどの形でやるか CROSSは十字の形
         // Size → CROSSのサイズと多分基準点 -1 -1 で中心?
 
-        Imgproc.morphologyEx(hsv, hsv, Imgproc.MORPH_OPEN, Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(3,3), new Point(-1, -1)));
+        Imgproc.morphologyEx(hsv, hsv, Imgproc.MORPH_OPEN, Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(3, 3), new Point(-1, -1)));
 
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat(hsv.cols(), hsv.rows(), CvType.CV_32SC1);
@@ -124,7 +130,7 @@ class SkinDetector {
 
         if (contours.size() == 0) {
             return null;
-        }else{
+        } else {
             return contours.get(maxIdx);
         }
     }

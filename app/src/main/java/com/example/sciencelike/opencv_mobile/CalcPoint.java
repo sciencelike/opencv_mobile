@@ -6,7 +6,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 class CalcPoint {
-    static double calcAngle (Point p1, Point p2, Point p3) {
+    static double calcAngle(Point p1, Point p2, Point p3) {
         // p2を中心とした角度計算
         double c_1x = p1.x - p2.x;
         double c_1y = p1.y - p2.y;
@@ -18,14 +18,14 @@ class CalcPoint {
         return Math.toDegrees(Math.acos(cos_theta));
     }
 
-    static double calcDistance (Point p1, Point p2) {
+    static double calcDistance(Point p1, Point p2) {
         // 二点からの距離計算
-        return Math.sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));
+        return Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
     }
 
-    static Point calcMoment (MatOfPoint contours) {
+    static Point calcMoment(MatOfPoint contours) {
         // 領域からの重心計算
         Moments mu = Imgproc.moments(contours);
-        return new Point(mu.m10/mu.m00, mu.m01/mu.m00);
+        return new Point(mu.m10 / mu.m00, mu.m01 / mu.m00);
     }
 }

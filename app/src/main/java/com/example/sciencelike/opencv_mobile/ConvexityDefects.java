@@ -15,7 +15,7 @@ import static com.example.sciencelike.opencv_mobile.CalcPoint.calcMoment;
 class ConvexityDefects {
     static private final MatOfInt4 convexityDefects = new MatOfInt4();
     static private int points = 0;
-    static private Scalar color = new Scalar(0,0,0);
+    static private Scalar color = new Scalar(0, 0, 0);
 
     static int getPointsNumber() {
         return points;
@@ -45,29 +45,28 @@ class ConvexityDefects {
         Imgproc.convexityDefects(contour, hull, convexityDefects);
 
         // 凹点カウント
-        int point=0;
+        int point = 0;
 
         // 後のために配列化
         int cd[] = {0};
         try {
-            if(!convexityDefects.empty()) {
+            if (!convexityDefects.empty()) {
                 cd = convexityDefects.toArray();
             }
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             // Log.i("ConvexityDefects","catch RuntimeException");
         }
 
-        if(cd==null || cd.length <= 0) return;
+        if (cd == null || cd.length <= 0) return;
 
         // 角度が指定より小さい場合 & 距離が指定より短い場合線を描画 + 凹点として採用
         try {
             Point point_moment = calcMoment(contour);
             for (int i = 0; i < cd.length; i += 4) {
-                if ((calcDistance(data[cd[i]], data[cd[i+2]]) + calcDistance(data[cd[i+1]], data[cd[i+2]]))/2 > (calcDistance(data[cd[i]], point_moment) + calcDistance(data[cd[i+1]], point_moment))/2 /3 &&
-                calcAngle(data[cd[i]], data[cd[i+2]], data[cd[i+1]]) < 90) {
-                    point+=1;
-                    if(draw) {
+                if ((calcDistance(data[cd[i]], data[cd[i + 2]]) + calcDistance(data[cd[i + 1]], data[cd[i + 2]])) / 2 > (calcDistance(data[cd[i]], point_moment) + calcDistance(data[cd[i + 1]], point_moment)) / 2 / 3 &&
+                        calcAngle(data[cd[i]], data[cd[i + 2]], data[cd[i + 1]]) < 90) {
+                    point += 1;
+                    if (draw) {
                         // 凸点から凹点までの線描画
                         Imgproc.line(img, data[cd[i]], data[cd[i + 2]], color);
                         Imgproc.line(img, data[cd[i + 1]], data[cd[i + 2]], color);
@@ -77,8 +76,7 @@ class ConvexityDefects {
                 }
             }
             points = point;
-        }
-        catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             // Log.i("ConvexityDefects", e.toString());
         }
     }

@@ -13,6 +13,7 @@ class Multithread extends Thread {
     public void run() {
         setAsyncTask();
     }
+
     private void setAsyncTask() {
         PlayerActivity.handler.post(new Runnable() {
             @Override
@@ -21,8 +22,8 @@ class Multithread extends Thread {
                 int[] location = new int[2];
                 pointer.getLocationOnScreen(location);
                 float shift = pointer.getWidth();
-                pointer.setX((int)PlayerActivity.getCursorPoint()[0]-shift/2);
-                pointer.setY((int)PlayerActivity.getCursorPoint()[1]-shift/2);
+                pointer.setX((int) PlayerActivity.getCursorPoint()[0] - shift / 2);
+                pointer.setY((int) PlayerActivity.getCursorPoint()[1] - shift / 2);
             }
         });
     }

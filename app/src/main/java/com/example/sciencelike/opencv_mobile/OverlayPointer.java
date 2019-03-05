@@ -58,7 +58,7 @@ public class OverlayPointer extends SurfaceView implements SurfaceHolder.Callbac
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder){
+    public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d("OverlayPointer", "destroy");
         isAttached = false;
         thread = null;
@@ -67,7 +67,7 @@ public class OverlayPointer extends SurfaceView implements SurfaceHolder.Callbac
     @Override
     public void run() {
         // メインループ（無限ループ）
-        while(isAttached){
+        while (isAttached) {
             // 表示位置
             int x = (int) PlayerActivity.getCursorPoint()[0];
             int y = (int) PlayerActivity.getCursorPoint()[1];
@@ -79,13 +79,12 @@ public class OverlayPointer extends SurfaceView implements SurfaceHolder.Callbac
                 canvas = holder.lockCanvas();
                 canvas.drawColor(0, PorterDuff.Mode.CLEAR);
                 Paint paint = new Paint();
-                paint.setARGB(255/2, 255, 0, 0);
+                paint.setARGB(255 / 2, 255, 0, 0);
                 canvas.drawCircle(x, y, 20, paint);
 
                 //描画処理を終了
                 holder.unlockCanvasAndPost(canvas);
-            }
-            catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 Log.d("OverlayPointer", e.toString());
             }
         }
