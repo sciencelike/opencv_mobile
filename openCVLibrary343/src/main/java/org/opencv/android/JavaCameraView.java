@@ -184,7 +184,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     */
 
                     // 試しにホワイトバランス固定
-                    params.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_FLUORESCENT);
+                    // params.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_FLUORESCENT);
 
                     mCamera.setParameters(params);
                     params = mCamera.getParameters();
@@ -357,7 +357,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         private Mat mRgba;
         private int mWidth;
         private int mHeight;
-    };
+    }
 
     private class CameraWorker implements Runnable {
 

@@ -15,7 +15,7 @@ import static com.example.sciencelike.opencv_mobile.CalcPoint.calcMoment;
 class ConvexityDefects {
     static private final MatOfInt4 convexityDefects = new MatOfInt4();
     static private int points = 0;
-    static private Scalar color = new Scalar(256, 0, 0);
+    static private Scalar color = new Scalar(0, 0, 256);
 
     static int getPointsNumber() {
         return points;

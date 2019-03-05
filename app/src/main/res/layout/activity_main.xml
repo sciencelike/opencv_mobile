@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.opencv.android.JavaCameraView
+        <com.example.sciencelike.opencv_mobile.JavaCameraResView
             android:id="@+id/CameraView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

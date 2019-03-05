@@ -46,7 +46,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     private ImageLoaderTask backgroundImageLoaderTask;
 
     // opencv
-    private CameraBridgeViewBase mOpenCvCameraView;
+    private JavaCameraResView mOpenCvCameraView;
 
     // opencv_クリック検出用
     private int check = 0;

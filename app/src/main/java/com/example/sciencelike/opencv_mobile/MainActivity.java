@@ -130,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                     ((Button) findViewById(R.id.Button_r)).setText(s_on);
                 else ((Button) findViewById(R.id.Button_r)).setText(s_off);
 
+                mOpenCvCameraView.changeCameraFlash();
+
                 Log.d("MainActivity Button", "Touched Button0");
 
                 break;
@@ -255,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                     Log.i("MainActivity Touchtest", "Touched button_r");
                     findViewById(R.id.Button_r).setBackgroundColor(0x96ffffff);
                     LogWriter.writeData(SystemClock.uptimeMillis(), "MainActivity_onCameraFrame_Touched button", "Button_r");
+                    button_click(findViewById(R.id.Button_r));
                 }
                 button_g.getLocationInWindow(location);
                 if (x >= location[0] && x <= (location[0] + button_g.getWidth()) && y >= location[1] && y <= (location[1] + button_g.getHeight())) {
@@ -306,6 +309,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 Toast t = Toast.makeText(context, "HSV調整: " + "H:" + Byte.toUnsignedInt(data[0]) + " S:" + Byte.toUnsignedInt(data[1]) + " V:" + Byte.toUnsignedInt(data[2]), Toast.LENGTH_SHORT);
                 t.show();
 
+                mOpenCvCameraView.changeCameraWhiteBalance();
+
                 return true;
             }
         }
@@ -346,7 +351,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     private static long lastmotionedtime = 0;
 
     private static final String TAG = "OpenCV/HandRecognition";
-    private CameraBridgeViewBase mOpenCvCameraView;
+    // private CameraBridgeViewBase mOpenCvCameraView;
+    private JavaCameraResView mOpenCvCameraView;
     private GestureDetector mGestureDetector;
     private Mat frame;
 }
