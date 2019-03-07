@@ -341,7 +341,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
 
     // 暫定的ボタン対応
     public void button_click(View view) {
-        Log.d("PlayerActivity Button", Integer.toString(buttonState));
+        Log.d("PlayerActivity Button State", Integer.toString(buttonState));
 
         switch (view.getId()) {
             case R.id.Button_1:
@@ -417,12 +417,10 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
         } else if (buttonState == 1) {
             finish();
         }
-
     }
 
     public boolean onTouchEvent(MotionEvent event) {
         event.getAction();
-
         return mGestureDetector.onTouchEvent(event);
     }
 
@@ -441,8 +439,8 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             for (int i = 1; i <= amountButton; i++) {
                 button_list.get(i - 1).getLocationInWindow(location);
                 if (x >= location[0] && x <= (location[0] + button_list.get(i - 1).getWidth()) && y >= location[1] && y <= (location[1] + button_list.get(i - 1).getHeight())) {
-                    Log.i("PlayerActivity Touchtest", "Touched button_" + i);
-                    LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Clicked button", Integer.toString(i));
+                    Log.i("PlayerActivity Touchtest", "Touched button_hand point" + i);
+                    LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Clicked button_hand point", Integer.toString(i));
                     button_click(button_list.get(i - 1));
                 }
             }
@@ -450,7 +448,6 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             return super.onSingleTapUp(event);
         }
     };
-
 
     static public float[] getCursorPoint() {
         return new float[]{x, y};
