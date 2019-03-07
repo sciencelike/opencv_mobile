@@ -121,6 +121,16 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
             button_list.add(temp);
         }
 
+        for (int i = 0; i < amountButton; i++) {
+            button_list.get(i).setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    mGestureDetector.onTouchEvent(event);
+                    return false;
+                }
+            });
+        }
+
         // ポインタ描画改
         pointer = findViewById(R.id.PointerCircle);
 
@@ -427,13 +437,13 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
     private final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onDown(MotionEvent event) {
-            Log.i("MainActivity Gesture", "Down ");
+            Log.i("PlayerActivity Gesture", "Down ");
             return true;
         }
 
         @Override
         public boolean onSingleTapUp(MotionEvent event) {
-            Log.i("MainActivity Gesture", "SingleTapUp ");
+            Log.i("PlayerActivity Gesture", "SingleTapUp ");
 
             int[] location = new int[2];
             for (int i = 1; i <= amountButton; i++) {
@@ -442,6 +452,9 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                     Log.i("PlayerActivity Touchtest", "Touched button_hand point" + i);
                     LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Clicked button_hand point", Integer.toString(i));
                     button_click(button_list.get(i - 1));
+                } else if (event.getRawX() >= location[0] && event.getRawX() <= (location[0] + button_list.get(i - 1).getWidth()) && event.getRawY() >= location[1] && event.getRawY() <= (location[1] + button_list.get(i - 1).getHeight())) {
+                    Log.i("PlayerActivity Touchtest", "Touched button_mouse point" + i);
+                    LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Clicked button_mouse point", Integer.toString(i));
                 }
             }
 
