@@ -453,6 +453,7 @@ public class PlayerActivity extends AppCompatActivity implements CvCameraViewLis
                     LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Clicked button_hand point", Integer.toString(i));
                     button_click(button_list.get(i - 1));
                 } else if (event.getRawX() >= location[0] && event.getRawX() <= (location[0] + button_list.get(i - 1).getWidth()) && event.getRawY() >= location[1] && event.getRawY() <= (location[1] + button_list.get(i - 1).getHeight())) {
+                    LogWriter.writeData(SystemClock.uptimeMillis(), "Touched button_MousePointer", event.getRawX(), event.getRawY());
                     Log.i("PlayerActivity Touchtest", "Touched button_mouse point" + i);
                     LogWriter.writeData(SystemClock.uptimeMillis(), "PlayerActivity_onCameraFrame_Clicked button_mouse point", Integer.toString(i));
                 }
